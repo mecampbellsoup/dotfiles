@@ -1,0 +1,9 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = mecampbellsoup
+	email = mecampbell25@gmail.com
+[core]
+	excludesfile = /Users/mec/.gitignore_global
+[github]
+	user = mecampbellsoup

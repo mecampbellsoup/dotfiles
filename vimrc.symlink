@@ -1,0 +1,219 @@
+" ----------------------------------------
+" Vundle
+" ----------------------------------------
+
+set nocompatible " be iMproved, required
+filetype off     " required!
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" ---------------
+" Plugins
+" ---------------
+
+" original repos on GitHub
+Plugin 'derekwyatt/vim-scala'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'mileszs/ack.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'mattn/gist-vim'
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/emmet-vim'
+Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'kurko/autocoder.vim'
+Plugin 'kurko/smartest.vim'
+
+"non-GitHub repos
+Plugin 'git://git.cryptomilk.org/projects/vim-gitmodeline.git/'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+" -------------------
+" Vim Config
+" -------------------
+" gist.vim copy to clipboard
+let g:gist_clip_command = 'pbcopy'
+
+" enable mustache abbreviations
+let g:mustache_abbreviations = 1
+
+" Autosave when vim loses focus
+:au FocusLost * :wa
+
+" Highlight text that passes the 80-character mark
+set colorcolumn=80
+
+" Save the file when you switch buffers, make it etc.
+set autowriteall
+
+" Show line & column values
+set ruler
+
+" Source the vimrc file after saving it
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
+
+" Disable paste mode when leaving Insert Mode
+au InsertLeave * set nopaste
+
+" no swp / backup files
+set nobackup
+set nowritebackup
+set noswapfile
+
+set hidden
+set nowrap                     " don't wrap lines
+set ignorecase                 " ignore case when searching
+set smartcase                  " ignore case if search pattern is all lowercase,
+                               "    case-sensitive otherwise
+set smarttab                   " insert tabs on the start of a line according to
+                               "    shiftwidth, not tabstop
+set hlsearch                   " highlight search terms
+set incsearch                  " show search matches as you type
+set showmatch                  " set show matching parenthesis
+set shiftwidth=2               " number of spaces to use for autoindenting
+set backspace=eol,start,indent " allow backspacing over everything in insert mode
+set autoindent                 " always set autoindenting on
+set smartindent
+
+" Fold configuration
+set foldmethod=indent
+set foldlevelstart=99
+set foldlevel=99
+
+" Folding
+nnoremap <leader>1 :set foldlevel=1<cr>
+nnoremap <leader>2 :set foldlevel=2<cr>
+nnoremap <leader>3 :set foldlevel=3<cr>
+nnoremap <leader>4 :set foldlevel=4<cr>
+nnoremap <leader>9 :set foldlevel=9<cr>
+
+" Set tab = 4 spaces
+set expandtab
+set sw=2
+set sts=2
+set ts=2
+
+" Show line numbers
+set number
+
+" Quick way to toggle paste mode
+set pastetoggle=<F2>
+
+" Wrap gitcommit file types at the appropriate length
+filetype indent plugin on
+
+" -----------------
+"  Status Line
+" -----------------
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+" -------------------
+" Vim Mappings
+" -------------------
+" in Vim Visual Mode, we can simply Ctrl+c to copy the block of text we want
+" into our system buffer
+map <C-c> "+y
+
+" use comma as <Leader> key instead of backslash
+let mapleader=","
+
+" Ctrl-P mapping to find files
+let g:ctrlp_map = '<leader>t'
+
+" imap keys to esc for more speed
+imap jk <Esc>
+
+" Insert a new-line after the current line by pressing Enter (Shift-Enter for inserting a line before the current line)
+nmap <S-CR> O<Esc>
+nmap <CR> o<Esc>
+
+" Remap semicolon for colon
+nnoremap ; :
+
+" Map ctrl-movement keys to window switching
+map <C-k> <C-w><Up>
+map <C-j> <C-w><Down>
+map <C-l> <C-w><Right>
+map <C-h> <C-w><Left>
+
+" <C-6> instead of <C-^>
+nnoremap <C-6> <C-^>
+
+" ack.vim
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" RSpec.vim mappings
+let g:rspec_command = "Dispatch bundle exec rspec {spec}"
+map <Leader>f :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>w :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" smartest.vim
+map <leader>t :call RunTestFile()<cr>
+map <leader>r :call RunNearestTest()<cr>
+
+" NERDTree
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.csv$', '\~$', '\.log$']
+filetype plugin indent on     " required!
+
+" Use syntax highlighting
+syntax on
+
+" Solarized
+syntax enable
+colorscheme solarized
+set background=dark
+
+" Autoread changes to files from external sources
+set autoread
