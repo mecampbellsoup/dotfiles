@@ -17,6 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 " ---------------
 
 " original repos on GitHub
+Plugin 'ervandew/supertab.git'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-ruby/vim-ruby'
