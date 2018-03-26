@@ -1,0 +1,18 @@
+# https://github.com/michaeldv/awesome_print/
+# $ gem install awesome_print
+begin
+  require 'awesome_print'
+  #Pry.config.print = proc { |output, value| output.puts value.ai(:indent => 2) }
+  Pry.config.prompt = proc { |obj, nest_level, _| "#{obj}:#{nest_level}> " }
+rescue LoadError => e
+  warn "[WARN] #{e}"
+  puts '$ gem install awesome_print'
+end
+
+class Object
+  def lm
+    methods - Object.methods
+  end
+end
+
+Pry.config.editor = 'vim'
