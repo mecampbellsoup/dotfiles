@@ -14,12 +14,17 @@ export ZSH=$HOME/.oh-my-zsh
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export SCALA_HOME="$(brew --prefix)/opt/scala/idea"
 
-# Miniconda Python
-#export PATH=$(brew --prefix)/miniconda3/bin:"$PATH"
+# Initialize pyenv-virtualenv
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null;
+then eval "$(pyenv virtualenv-init -)";
+fi
+
+# Initialize rbenv
+eval "$(rbenv init -)"
 
 # Python RC
 export PYTHONSTARTUP=~/.pythonrc
-
 
 # Custom bin scripts
 export PATH=$HOME/bin:$PATH
@@ -110,9 +115,6 @@ fi
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
-# Initialize rbenv
-eval "$(rbenv init -)"
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -125,7 +127,7 @@ eval "$(rbenv init -)"
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="$EDITOR ~/.zshrc"
+alias zshconfig="$EDITOR ~/.dotfiles/zshrc.symlink"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias update_hosts='dscacheutil -flushcache'
 alias pr='hub pull-request'
@@ -135,10 +137,5 @@ alias crypto='cd $HOME/Sites/crypto'
 timestamp() {
   date +%s
 }
-
-# exercism.io
-if [ -f ~/.config/exercism/exercism_completion.zsh ]; then
-  . ~/.config/exercism/exercism_completion.zsh
-fi
 
 alias brewski='brew update && brew upgrade && brew cleanup && brew prune && brew cask cleanup; brew doctor; brew cask doctor'
