@@ -1,0 +1,19 @@
+.DS_Store
+*~
+*.swp
+tags
+
+*.gem
+
+# Used by dotenv library to load environment variables.
+# .env
+
+# Here be dragons!
+~/.localrc
+
+# IntelliJ
+*.iml
+*.idea
+
+# Very unlikely you want to ever commit a Keynote presentation file to VCS
+*.key

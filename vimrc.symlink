@@ -17,8 +17,9 @@ Plugin 'gmarik/Vundle.vim'
 " ---------------
 
 " original repos on GitHub
+Plugin 'sheerun/vim-polyglot'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'ervandew/supertab.git'
-Plugin 'derekwyatt/vim-scala'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-endwise'
@@ -30,7 +31,6 @@ Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-syntastic/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'mileszs/ack.vim'
 Plugin 'altercation/vim-colors-solarized'
