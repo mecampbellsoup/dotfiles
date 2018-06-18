@@ -127,6 +127,7 @@ alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias update_hosts='dscacheutil -flushcache'
 alias pr='hub pull-request'
 alias crypto='cd $HOME/Sites/crypto'
+alias gclo='git clone --recursive'
 
 # Define a timestamp function
 timestamp() {
