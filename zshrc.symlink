@@ -103,7 +103,7 @@ alias zshconfig="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias update_hosts='dscacheutil -flushcache'
 alias pr='hub pull-request'
-alias code='cd $HOME/Sites/Code'
+
 alias gclo='git clone --recursive'
 alias brewski='brew update && brew upgrade && brew cleanup && brew prune' \
   ' brew doctor; brew cask cleanup; brew cask upgrade; brew cask doctor'
