@@ -2,25 +2,18 @@
 # enable syntax completion and keep command history
 
 import os
-history_file = os.path.join(os.environ['HOME'], '.python_history')
-
-try:
-    import readline
-    readline.read_history_file(history_file)
-except ImportError:
-    print("Module readline not available.")
-except IOError:
-    pass
-
+# In addition to os, import some useful things:
+import re
+from collections import *
+from itertools import *
 import rlcompleter
 import atexit
+import readline
+
+history_file = os.path.expanduser('~/.python_history')
+readline.read_history_file(history_file)
 readline.parse_and_bind("tab: complete")
 readline.set_history_length(1000)
 atexit.register(readline.write_history_file, history_file)
 
 del readline, rlcompleter, atexit, history_file
-
-# In addition to os, import some useful things:
-import re
-from collections import *
-from itertools import *

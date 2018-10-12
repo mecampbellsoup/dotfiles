@@ -1,2 +1,4 @@
 --ignore-dir=log/
 --ignore-dir=*venv
+--ignore-dir=node_modules
+--stats-only
