@@ -1,9 +1,18 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-	name = mecampbellsoup
+	name = Matt Campbell
 	email = mecampbell25@gmail.com
 [core]
-	excludesfile = /Users/mec/.gitignore_global
+  editor = vim
+	excludesfile = ~/.gitignore_global
 [github]
 	user = mecampbellsoup
+[alias]
+  st = status
+  ci = commit
+  co = checkout
+  br = branch
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  ap = add --patch

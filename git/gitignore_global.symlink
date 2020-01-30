@@ -5,8 +5,9 @@ tags
 
 *.gem
 
-# Used by dotenv library to load environment variables.
-# .env
+# Used by dotenv/direnv library to load environment variables.
+.env
+.envrc
 
 # Here be dragons!
 ~/.localrc
@@ -14,6 +15,8 @@ tags
 # IntelliJ
 *.iml
 *.idea
+
+__pycache__/
 
 # Very unlikely you want to ever commit a Keynote presentation file to VCS
 *.key
