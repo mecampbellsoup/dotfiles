@@ -1,0 +1,7 @@
+# [UNIX] gnome-terminal doesn't play nicely with set-clipboard
+# set-option -s set-clipboard off
+set-option -s set-clipboard on
+
+CLIPBOARD="xclip -i -f -selection primary | xclip -i -selection clipboard"
+bind -T copy-mode-vi y                 send-keys -X copy-pipe-and-cancel $CLIPBOARD
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel $CLIPBOARD

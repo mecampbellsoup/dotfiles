@@ -36,7 +36,7 @@ ZSH_THEME="robbyrussell"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+#ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -66,17 +66,13 @@ plugins=(
   history
   git
   dotenv
-  osx
   rake
+  rails
   zsh-completions
   tmux
+  tmuxinator
 )
 autoload -U compinit && compinit
-
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-  fpath=(/usr/local/share/zsh-completions $fpath)
-fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -84,7 +80,7 @@ source $ZSH/oh-my-zsh.sh
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
 for file in ~/.{path,exports,aliases,functions,extra}; do
-	[ -r "$file" ] && [ -f "$file" ] && source "$file";
+  [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
 # User configuration
@@ -99,51 +95,26 @@ fi
 
 # rbenv
 eval "$(rbenv init -)"
-# link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded)
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-
-# pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# pyenv conmpletions
-source $(pyenv root)/completions/pyenv.zsh
-
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/zsh_completion" ] && \. "$NVM_DIR/zsh_completion"  # This loads nvm bash_completion
-
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
 
 # User-defined bin scripts
 export PATH="$HOME/.bin:$PATH"
 
-export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix)/opt/openssl/lib/
+# Mac OS-specific modifications
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+    fpath=(/usr/local/share/zsh-completions $fpath)
+  fi
+
+  # link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded)
+  export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+  export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix)/opt/openssl/lib/
+
+  # Homebrew sbin
+  export PATH="/usr/local/sbin:$PATH"
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+  eval `dircolors ~/.dir_colors/dircolors`
+fi
 
 # direnv
 eval "$(direnv hook zsh)"
-
-# Homebrew sbin
-export PATH="/usr/local/sbin:$PATH"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

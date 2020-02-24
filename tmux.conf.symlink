@@ -5,10 +5,6 @@ set -g prefix 'C-\'
 # enable mouse
 set-option -g mouse on
 
-# [UNIX] gnome-terminal doesn't play nicely with set-clipboard
-#set-option -s set-clipboard off
-#bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
-
 # Reduce repeat-time from default 500ms
 set-option -g repeat-time 100
 
@@ -44,8 +40,7 @@ setw -g xterm-keys on
 set-option -g default-terminal "screen-256color"
 
 # reattach to user namespace
-set-option -g default-command "reattach-to-user-namespace -l zsh"
-
+if-shell "uname | grep -q Darwin" "source-file ~/.tmux-macosx.conf" "source-file ~/.tmux-linux.conf"
 
 # Start numbering at 1
 set -g base-index 1
@@ -107,12 +102,11 @@ set-window-option -g window-status-current-style fg=white,bg=red,bright
 # command/message line colors
 set-option -g message-style fg=white,bg=black,bright
 
-## tmux-plugins
+## tmux-plugins/tpm
 
 # List of plugins
-#set -g @plugin 'tmux-plugins/tpm'
-#set -g @plugin 'tmux-plugins/tmux-sensible'
-#set -g @plugin 'nhdaly/tmux-better-mouse-mode'
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-#run -b '~/.tmux/plugins/tpm/tpm'
+run -b '~/.tmux/plugins/tpm/tpm'

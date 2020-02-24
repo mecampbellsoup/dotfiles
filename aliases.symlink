@@ -5,5 +5,5 @@
 #
 # Example aliases
 alias zshconfig="$EDITOR ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
+alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
+alias mux="tmuxinator"
