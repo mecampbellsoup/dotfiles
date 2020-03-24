@@ -1,13 +1,12 @@
 # This is Git's per-user configuration file.
 [user]
-# Please adapt and uncomment the following lines:
-	name = Matt Campbell
-	email = mecampbell25@gmail.com
+  name = Matt Campbell
+  email = mecampbell25@gmail.com
 [core]
   editor = vim
-	excludesfile = ~/.gitignore_global
+  excludesfile = ~/.gitignore_global
 [github]
-	user = mecampbellsoup
+  user = mecampbellsoup
 [alias]
   st = status
   ci = commit

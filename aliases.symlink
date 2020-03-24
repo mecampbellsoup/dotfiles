@@ -7,3 +7,8 @@
 alias zshconfig="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias mux="tmuxinator"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+fi
+

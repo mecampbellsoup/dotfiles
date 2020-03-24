@@ -2,8 +2,9 @@
 unbind-key C-b
 set -g prefix 'C-\'
 
-# enable mouse
+# enable mouse and clipboard
 set-option -g mouse on
+set-option -s set-clipboard on
 
 # Reduce repeat-time from default 500ms
 set-option -g repeat-time 100
@@ -75,7 +76,7 @@ set -s escape-time 0
 setw -g aggressive-resize on
 
 # Plenty of tmux history...
-set -g history-limit 10000
+set -g history-limit 100000
 
 # opens htop in a split pane
 bind-key H split-window -h 'htop'

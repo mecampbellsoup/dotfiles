@@ -62,16 +62,12 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  history
-  git
-  dotenv
-  rake
-  rails
-  zsh-completions
-  tmux
-  tmuxinator
-)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  plugins=(zsh-syntax-highlighting history git rake rails zsh-completions tmux tmuxinator yarn kubectl brew osx)
+else
+  plugins=(zsh-syntax-highlighting history git rake rails zsh-completions tmux tmuxinator yarn kubectl)
+fi
+
 autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
@@ -96,9 +92,6 @@ fi
 # rbenv
 eval "$(rbenv init -)"
 
-# User-defined bin scripts
-export PATH="$HOME/.bin:$PATH"
-
 # Mac OS-specific modifications
 if [[ "$OSTYPE" == "darwin"* ]]; then
   if type brew &>/dev/null; then
@@ -109,12 +102,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded)
   export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
   export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix)/opt/openssl/lib/
-
-  # Homebrew sbin
-  export PATH="/usr/local/sbin:$PATH"
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
   eval `dircolors ~/.dir_colors/dircolors`
 fi
 
-# direnv
-eval "$(direnv hook zsh)"
+# pyenv
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

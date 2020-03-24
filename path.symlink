@@ -1,0 +1,5 @@
+# Homebrew sbin
+export PATH="/usr/local/sbin:$PATH"
+
+# User-defined bin scripts
+export PATH="$HOME/.bin:$PATH"

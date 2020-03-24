@@ -1,6 +1,6 @@
 CLIPBOARD="pbcopy"
-bind -T copy-mode-vi y                 send-keys -X copy-pipe-and-cancel $LINUX_CLIPBOARD
-bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel $LINUX_CLIPBOARD
+bind -T copy-mode-vi y                 send-keys -X copy-pipe-and-cancel $CLIPBOARD
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel $CLIPBOARD
 
 # zsh reattach-to-user-namespace wrapper
 # https://github.com/tmux-plugins/tmux-sensible/issues/42
