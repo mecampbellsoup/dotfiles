@@ -13,3 +13,11 @@ export EDITOR='vim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
+
+# Default to safe kubeconfig, i.e. one that cannot accidentally mess up production clusters.
+export KUBECONFIG=~/.kube/config.d/tenant-matt
+
+# Golang
+export GOPATH=$(go env GOPATH)
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOROOT:$GOPATH:$GOBIN
