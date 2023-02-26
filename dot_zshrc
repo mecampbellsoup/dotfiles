@@ -65,7 +65,7 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(ssh-agent poetry docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1 fzf-tab)
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  plugins+=(brew osx)
+  plugins+=(brew macos)
 fi
 
 autoload -U compinit && compinit
