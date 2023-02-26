@@ -33,6 +33,7 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'lifepillar/pgsql.vim'
+Plugin 'chr4/nginx.vim'
 
 " Ruby-specific Vim plugin(s)
 Plugin 'vim-ruby/vim-ruby'
@@ -217,3 +218,5 @@ colorscheme solarized
 
 " Autoread changes to files from external sources
 set autoread
+
+set maxmempattern=2000

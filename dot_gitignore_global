@@ -5,10 +5,6 @@ tags
 
 *.gem
 
-# Used by dotenv/direnv library to load environment variables.
-.env
-.envrc
-
 # Here be dragons!
 ~/.localrc
 

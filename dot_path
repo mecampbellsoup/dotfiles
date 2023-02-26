@@ -1,0 +1,14 @@
+# Homebrew sbin
+export PATH="/usr/local/sbin:$PATH"
+
+# User-defined bin scripts
+export PATH="$HOME/.bin:$PATH"
+
+# System Ruby & RubyGems install
+export PATH="$PATH:$(ruby -e 'puts Gem.user_dir')/bin"
+
+# poetry
+export PATH="$HOME/.local/bin:$PATH"
+
+# luarocks
+export PATH="$HOME/.luarocks/bin:$PATH"
