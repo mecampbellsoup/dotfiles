@@ -11,12 +11,16 @@
     stripComponents = 1
     refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/fzf-tab"]
-    type = "git-repo"
-    url = "https://github.com/Aloxaf/fzf-tab.git"
+    type = "archive"
+    url = "https://github.com/Aloxaf/fzf-tab/archive/refs/heads/master.zip"
+    exact = true
+    stripComponents = 1
     refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-completions"]
-    type = "git-repo"
-    url = "https://github.com/zsh-users/zsh-completions.git"
+    type = "archive"
+    url = "https://github.com/zsh-users/zsh-completions/archive/refs/heads/master.tar.gz"
+    exact = true
+    stripComponents = 1
     refreshPeriod = "168h"
 [".oh-my-zsh/custom/themes/powerlevel10k"]
     type = "archive"
