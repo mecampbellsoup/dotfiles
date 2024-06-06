@@ -1,0 +1,17 @@
+[alias]
+  ap = add --patch
+  st = status
+  br = branch
+  co = checkout
+  cb = checkout -b
+  d = diff
+  df = diff
+  ds = diff --stat
+  dc = diff --cached
+  dcs = diff --cached --stat
+  f = fetch --prune
+  p = push
+  cm = commit -m
+[user]
+  email = mecampbell25@gmail.com
+  name = Matthew Campbell

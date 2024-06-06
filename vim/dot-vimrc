@@ -1,0 +1,212 @@
+" ----------------------------------------
+" vim-plug
+" ----------------------------------------
+
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
+set nocompatible " be iMproved, required
+
+call plug#begin()
+
+" ---------------
+" Plugs
+" ---------------
+
+" original repos on GitHub
+Plug 'vim-syntastic/syntastic'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'mileszs/ack.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'mattn/gist-vim'
+Plug 'mattn/webapi-vim'
+Plug 'mattn/emmet-vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'lifepillar/pgsql.vim'
+Plug 'chr4/nginx.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Ruby-specific Vim plugin(s)
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rbenv'
+Plug 'tpope/rbenv-ctags'
+
+" All of your Plugs must be added before the following line
+call plug#end()
+
+" -------------------
+" Vim Config
+" -------------------
+if system('uname -s') == "Darwin\n"
+  set clipboard=unnamed "OSX
+else
+  set clipboard=unnamedplus "Linux
+endif
+
+" gist.vim copy to clipboard
+let g:gist_clip_command = 'pbcopy'
+let g:gist_open_browser_after_post = 1
+let g:gist_detect_filetype = 1
+
+" Autosave when vim loses focus
+:au FocusLost * :wa
+
+" Highlight text that passes the 80-character mark
+set colorcolumn=80
+
+" Save the file when you switch buffers, make it etc.
+set autowriteall
+
+" Show line & column values
+set ruler
+
+" Source the vimrc file after saving it
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
+
+" Disable paste mode when leaving Insert Mode
+au InsertLeave * set nopaste
+
+" no swp / backup files
+set nobackup
+set nowritebackup
+set noswapfile
+
+set hidden
+set nowrap                     " don't wrap lines
+set ignorecase                 " ignore case when searching
+set smartcase                  " ignore case if search pattern is all lowercase,
+                               "    case-sensitive otherwise
+set smarttab                   " insert tabs on the start of a line according to
+                               "    shiftwidth, not tabstop
+set hlsearch                   " highlight search terms
+set incsearch                  " show search matches as you type
+set showmatch                  " set show matching parenthesis
+set shiftwidth=2               " number of spaces to use for autoindenting
+set backspace=eol,start,indent " allow backspacing over everything in insert mode
+set autoindent                 " always set autoindenting on
+set smartindent
+
+" Fold configuration
+set foldmethod=indent
+set foldlevelstart=99
+set foldlevel=99
+
+" Folding
+nnoremap <leader>1 :set foldlevel=1<cr>
+nnoremap <leader>2 :set foldlevel=2<cr>
+nnoremap <leader>3 :set foldlevel=3<cr>
+nnoremap <leader>4 :set foldlevel=4<cr>
+nnoremap <leader>9 :set foldlevel=9<cr>
+
+" Set tab = 4 spaces
+set expandtab
+set sw=2
+set sts=2
+set ts=2
+
+" Show line numbers
+set number
+
+" Quick way to toggle paste mode
+set pastetoggle=<F2>
+
+" Wrap gitcommit file types at the appropriate length
+filetype indent plugin on
+
+" -----------------
+"  Status Line
+" -----------------
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+" -------------------
+" Vim Mappings
+" -------------------
+" in Vim Visual Mode, we can simply Ctrl+c to copy the block of text we want
+" into our system buffer
+map <C-c> "+y
+
+" use comma as <Leader> key instead of backslash
+let mapleader=","
+
+" Ctrl-P mapping to find files
+let g:ctrlp_map = '<leader>t'
+
+" imap keys to esc for more speed
+imap jk <Esc>
+
+" Insert a new-line after the current line by pressing Enter (Shift-Enter for inserting a line before the current line)
+nmap <S-CR> O<Esc>
+nmap <CR> o<Esc>
+
+" Remap semicolon for colon
+nnoremap ; :
+
+" Map ctrl-movement keys to window switching
+map <C-k> <C-w><Up>
+map <C-j> <C-w><Down>
+map <C-l> <C-w><Right>
+map <C-h> <C-w><Left>
+
+" <C-6> instead of <C-^>
+nnoremap <C-6> <C-^>
+
+" ack.vim
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" NERDTree
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.csv$', '\~$', '\.log$']
+filetype plugin indent on     " required!
+
+" Use syntax highlighting
+syntax on
+
+" Set filetype to cfg for .conf file extensions
+autocmd BufRead,BufNewFile *.conf setfiletype cfg
+
+" Solarized
+set background=dark
+colorscheme solarized
+
+" Autoread changes to files from external sources
+set autoread
+
+set maxmempattern=2000
+
