@@ -12,3 +12,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # luarocks
 export PATH="$HOME/.luarocks/bin:$PATH"
+
+# chezmoi
+export PATH="~/bin:$PATH"
