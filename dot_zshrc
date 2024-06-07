@@ -98,40 +98,15 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
     fpath=(/usr/local/share/zsh-completions $fpath)
   fi
-
-  # link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded)
-  export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-  export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix)/opt/openssl/lib/
 fi
 
 # kube-ps1
-
-function get_cluster_short() {
-  #echo $1
-  #short=$(echo "$1" | cut -d . -f1)
-  #return short
-  echo "$1" | cut -d . -f1
-}
-export KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
-
-function get_namespace_upper() {
-  echo "$1" | tr '[:lower:]' '[:upper:]'
-}
-
-export KUBE_PS1_NAMESPACE_FUNCTION=get_namespace_upper
-
 PROMPT='$(kube_ps1)'$PROMPT
 
 # krew
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# rbenv
-eval "$(rbenv init -)"
-
 # skaffold completions
 source <(skaffold completion zsh)
-
-# lua@5.3
-export PATH="/usr/local/opt/lua@5.3/bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
