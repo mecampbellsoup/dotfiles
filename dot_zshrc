@@ -110,3 +110,4 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 source <(skaffold completion zsh)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
