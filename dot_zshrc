@@ -63,7 +63,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(ssh-agent poetry docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1 fzf-tab)
+plugins=(ssh-agent poetry docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1)
 if [[ "$OSTYPE" == "darwin"* ]]; then
   plugins+=(brew macos)
 fi
@@ -114,3 +114,5 @@ source <(fzf --zsh)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# rbenv
+rbenv init
