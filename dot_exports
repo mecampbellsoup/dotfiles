@@ -3,21 +3,10 @@
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
 export EDITOR='vim'
+
+# Set default user shell to zsh
+export SHELL=/usr/bin/zsh
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
-
-# Default to safe kubeconfig, i.e. one that cannot accidentally mess up production clusters.
-# export KUBECONFIG=~/.kube/config:~/.kube/oidc-coreweave:~/Downloads/cw-kubeconfig
-
-# Golang
-export GOPATH=$HOME/go
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOPATH:$GOBIN
