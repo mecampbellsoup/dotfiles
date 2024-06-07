@@ -114,4 +114,4 @@ source <(skaffold completion zsh)
 source <(fzf --zsh)
 
 # rbenv
-rbenv init
+eval "$(rbenv init -)"
