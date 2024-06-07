@@ -11,8 +11,3 @@ alias mux="tmuxinator"
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias brewski='reset && brew update && brew upgrade && brew cleanup; brew doctor'
 fi
-
-alias nodes="kubectl get nodes -o=custom-columns=\"NAME:metadata.name,IP:status.addresses[?(@.type=='InternalIP')].address,TYPE:metadata.labels['node\.coreweave\.cloud\/type'],READY:status.conditions[?(@.type=='Ready')].status,CORDON:spec.unschedulable,TAINT:spec.taints[?(@.key=='qos.coreweave.cloud/interruptable')].effect,RELIABILITY:metadata.labels['node\.coreweave\.cloud\/reliability'],VERSION:metadata.labels['node\.coreweave\.cloud\/version']\""
-
-# https://github.com/nvbn/thefuck
-eval $(thefuck --alias)
