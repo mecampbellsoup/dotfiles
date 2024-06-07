@@ -109,5 +109,8 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 # skaffold completions
 source <(skaffold completion zsh)
 
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
