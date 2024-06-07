@@ -1,3 +1,6 @@
+eval "$(pyenv init -)"
 
 # Added by `rbenv init` on Fri Jun  7 01:27:13 PM EDT 2024
 eval "$(~/.rbenv/bin/rbenv init - zsh)"
+
+
