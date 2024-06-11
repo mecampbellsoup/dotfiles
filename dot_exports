@@ -6,7 +6,7 @@
 export EDITOR='vim'
 
 # Set default user shell to zsh
-export SHELL=/usr/bin/zsh
+export SHELL=/bin/zsh
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"

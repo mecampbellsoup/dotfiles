@@ -1,0 +1,15 @@
+#!/bin/sh
+{{ if eq .chezmoi.os "linux" -}}
+sudo apt update
+sudo apt install tmux git
+{{ else if eq .chezmoi.os "darwin" -}}
+brew bundle --no-lock --file=/dev/stdin <<EOF
+cask "google-chrome"
+brew "git"
+brew "tmux"
+brew "tmuxinator"
+EOF
+{{ end -}}
+
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+gem install tmuxinator
