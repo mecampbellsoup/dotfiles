@@ -1,0 +1,4 @@
+# pack-refs with: peeled fully-peeled sorted 
+d4da65e238a676c1e8a6e1880ca348c2a474c98c refs/remotes/origin/autodetect-enterprise
+0210f85cc1487373c785b4fc4778f4c798ed8efd refs/remotes/origin/enterprise-dictionary
+ee69335de176d9325267b0fd2597a22901d927b1 refs/remotes/origin/master

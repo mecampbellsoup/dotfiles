@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+#
+# Summary: Generate ctags for a given version's standard library
+#
+# Usage: rbenv ctags
+#        rbenv ctags <version> [<version> ...]
+#        rbenv ctags --all
+
+shopt -s nullglob
+
+# Provide rbenv completions
+if [ "$1" = "--complete" ]; then
+  exec rbenv-versions --bare
+fi
+
+declare -a versions
+
+for arg; do
+  case $arg in
+    --) ;;
+    -a|--all)
+      all=1
+      ;;
+    -*)
+      rbenv-help --usage ctags >&2
+      exit 1
+      ;;
+    *)
+      versions["${#versions[@]}"]="$arg"
+      ;;
+  esac
+done
+
+generate_ctags_in() {
+  local tags_file_dir="$1"
+  local languages="${2:-Ruby}"
+  local source_code_dir="${3:-$tags_file_dir}"
+  echo "Running ctags on $source_code_dir"
+  (cd "$tags_file_dir"; ctags --languages="$languages" -R --tag-relative=yes "$source_code_dir")
+}
+
+generate_ctags_for() {
+  local prefix=$(rbenv-prefix "$1")
+  [ -n "$prefix" ] || return 1
+  if [ -w "$prefix/lib/ruby" ]; then
+    for dir in \
+      "$prefix"/lib/ruby/[0-9]* \
+      "$prefix"/lib/ruby/shared*
+    do
+      generate_ctags_in "$dir"
+    done
+    for dir in \
+      "$prefix"/lib/ruby/site_ruby/[0-9]* \
+      "$prefix"/lib/ruby/vendor_ruby/[0-9]*
+    do
+      [ "$(find "$dir" -name '*.rb'|wc -l)" = 0 ] || generate_ctags_in "$dir"
+    done
+  elif [ -w "$prefix/lib" ]; then
+    generate_ctags_in "$prefix/lib"
+  else
+    echo "No directories for ctags found in $prefix" >&2
+    return 1
+  fi
+
+  local ruby_include_dir="$(RBENV_VERSION=$version rbenv-exec ruby -rrbconfig -e 'print RbConfig::CONFIG["rubyhdrdir"] || RbConfig::CONFIG["topdir"]')"
+  if [ -w "$ruby_include_dir" ]; then
+    generate_ctags_in "$ruby_include_dir" "C,C++" "${RUBY_BUILD_BUILD_PATH:-$ruby_include_dir}"
+  else
+    echo "No Ruby include directory for ctags found in $prefix" >&2
+    return 1
+  fi
+}
+
+if [ -n "$all" ]; then
+  for version in $(rbenv-versions --bare); do
+    [ -L "$(rbenv-prefix "$version")" ] || \
+      generate_ctags_for "$version"
+  done
+elif [ ${#versions[@]} -eq 0 ]; then
+  generate_ctags_for "$(rbenv-version-name)"
+else
+  code=0
+  for version in "${versions[@]}"; do
+    generate_ctags_for "$version" || code=1
+  done
+  exit "$code"
+fi

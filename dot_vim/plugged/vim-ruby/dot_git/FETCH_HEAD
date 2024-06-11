@@ -1,0 +1,8 @@
+f06f069ce67bdda6f2cd408f8859cdf031e5b6b4		branch 'master' of https://github.com/vim-ruby/vim-ruby
+733247f835c3731fa7b9eedd12b7f123a0f3736d	not-for-merge	branch 'attr-define' of https://github.com/vim-ruby/vim-ruby
+255cd93f44cf2fc3254eacade480d3c7f167cc6a	not-for-merge	branch 'fish' of https://github.com/vim-ruby/vim-ruby
+a7f0ea412b7680d90122976f3361ea248d4dc5b6	not-for-merge	branch 'fix-blocks-in-dot-continuations' of https://github.com/vim-ruby/vim-ruby
+1a63017a9f780cb7d2a85ffb916012c9cee330ed	not-for-merge	branch 'fix-closing-bracket-bug' of https://github.com/vim-ruby/vim-ruby
+58eb7d247662eace49791d0ad0403ccfe4b3e7dd	not-for-merge	branch 'noisy' of https://github.com/vim-ruby/vim-ruby
+8372778434514bd3247e59e17cc8c550b56b381a	not-for-merge	branch 'rubycomplete_updates' of https://github.com/vim-ruby/vim-ruby
+bd3aaa2e062e4c692363af2094af481c7fd53b14	not-for-merge	branch 'vim9-support' of https://github.com/vim-ruby/vim-ruby
