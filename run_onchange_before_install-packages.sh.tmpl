@@ -12,6 +12,7 @@ EOF
 {{ end -}}
 
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+eval "$(rbenv init - zsh)"
 RUBY_VERSION=3.3.3
 rbenv install $RUBY_VERSION --skip-existing
 rbenv global $RUBY_VERSION
