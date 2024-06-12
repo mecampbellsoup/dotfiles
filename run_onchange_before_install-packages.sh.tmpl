@@ -12,4 +12,7 @@ EOF
 {{ end -}}
 
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+RUBY_VERSION=3.3.3
+rbenv install $RUBY_VERSION
+rbenv global $RUBY_VERSION
 gem install tmuxinator
