@@ -7,7 +7,8 @@ then
 fi
 
 # Added by `rbenv init` on Fri Jun  7 01:27:13 PM EDT 2024
-if [ -f ~/.rbenv/bin/rbenv ]; then
-  eval "$(~/.rbenv/bin/rbenv init - zsh)"
+if command -v rbenv &> /dev/null
+then
+  eval "$(rbenv init - zsh)"
 fi
 
