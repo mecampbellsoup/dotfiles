@@ -12,3 +12,5 @@ alias k="kubectl"
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias brewski='reset && brew update && brew upgrade && brew cleanup; brew doctor'
 fi
+
+alias cm="chezmoi"
