@@ -117,6 +117,7 @@ source <(skaffold completion zsh)
 source <(fzf --zsh)
 
 # rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 # pyenv
