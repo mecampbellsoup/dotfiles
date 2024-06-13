@@ -14,3 +14,4 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 alias cm="chezmoi"
+
