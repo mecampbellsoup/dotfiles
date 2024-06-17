@@ -10,5 +10,6 @@ backups/** # ignore the contents of backups folder but not the folder itself
 
 # omz cache
 .oh-my-zsh/cache/completions/
+.oh-my-zsh/cache/grep-alias
 
 .localrc
