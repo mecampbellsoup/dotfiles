@@ -43,12 +43,12 @@ windows:
       root: ~/code/coreweave/k8s-services/dev
       panes:
         - git pull --all
-  - cloud-app:
-      root: ~/code/coreweave/cloud-app
-      panes:
-        - git pull --all
   - cloud-console:
       root: ~/code/coreweave/cloud-console
+      panes:
+        - git pull --all
+  - cloud-app:
+      root: ~/code/coreweave/cloud-app
       panes:
         - git pull --all
 
