@@ -133,5 +133,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # teleport
-source $HOME/teleport_tools_source.zsh
+[ -f $HOME/teleport_tools_source.zsh ] && source $HOME/teleport_tools_source.zsh
 
