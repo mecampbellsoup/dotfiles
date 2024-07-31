@@ -76,7 +76,7 @@ fi
 autoload -U compinit && compinit
 
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ssh-agent
-zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
 source $ZSH/oh-my-zsh.sh
 
