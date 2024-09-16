@@ -51,4 +51,7 @@ windows:
       root: ~/code/coreweave/cloud-app
       panes:
         - git pull --all
-
+  - k8s-billing:
+      root: ~/code/coreweave/k8s-billing
+      panes:
+        - git pull --all
