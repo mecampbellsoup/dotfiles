@@ -1,15 +1,18 @@
 #!/bin/zsh
 {{ if eq .chezmoi.os "linux" -}}
 sudo apt update
-sudo apt install tmux git
+sudo apt install tmux git silversearcher-ag
+
 # For Linux x86_64 (amd64)
 curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
   sudo install skaffold /usr/local/bin/ && \
   rm -f skaffold
+
 {{ else if eq .chezmoi.os "darwin" -}}
 brew bundle --no-lock --file=/dev/stdin <<EOF
 cask "google-chrome"
 brew "git"
+brew "the_silver_searcher"
 brew "tmux"
 brew "tmuxinator"
 brew "skaffold"
