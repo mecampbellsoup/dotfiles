@@ -156,3 +156,7 @@ setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line 
 
 # add to # ~/.zshrc
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
+
+# 1password
+source $HOME/.config/op/plugins.sh
+
