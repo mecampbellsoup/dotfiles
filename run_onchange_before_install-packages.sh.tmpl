@@ -1,7 +1,10 @@
 #!/bin/zsh
 {{ if eq .chezmoi.os "linux" -}}
 sudo apt update
-sudo apt install tmux git silversearcher-ag
+sudo apt install tmux
+sudo apt install git
+sudo apt install silversearcher-ag
+sudo apt install fzf
 
 # For Linux x86_64 (amd64)
 curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
@@ -11,12 +14,16 @@ curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffo
 {{ else if eq .chezmoi.os "darwin" -}}
 brew bundle --no-lock --file=/dev/stdin <<EOF
 cask "google-chrome"
+brew "tmux"
 brew "git"
 brew "the_silver_searcher"
-brew "tmux"
-brew "tmuxinator"
-brew "skaffold"
+brew "fzf"
 EOF
+
+# For macOS on ARMv8 (arm64)
+curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-darwin-$(/usr/bin/arch) && \
+  sudo install skaffold /usr/local/bin/ && \
+  rm -f skaffold
 {{ end -}}
 
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
@@ -25,5 +32,8 @@ RUBY_VERSION=3.3.3
 rbenv install $RUBY_VERSION --skip-existing
 rbenv global $RUBY_VERSION
 gem install tmuxinator
+
+# https://github.com/pyenv/pyenv#installation
+curl https://pyenv.run | bash
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
