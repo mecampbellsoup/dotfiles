@@ -207,3 +207,6 @@ colorscheme solarized
 set autoread
 
 set maxmempattern=2000
+
+" fzf
+set rtp+=/opt/homebrew/opt/fzf
