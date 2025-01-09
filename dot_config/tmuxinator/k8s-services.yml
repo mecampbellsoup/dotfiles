@@ -1,7 +1,8 @@
-# /Users/mattysoup/.config/tmuxinator/k8s-services.yml
+# ~/.config/tmuxinator/k8s-services.yml
 
-name: k8s-services
-
+name: swarf
+root: ~/code/swarf
+tmux_detached: false
 # Optional tmux socket
 # socket_name: foo
 
@@ -10,15 +11,15 @@ name: k8s-services
 
 # Project hooks
 # Runs on project start, always
-on_project_start: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn; sudo openvpn3 session-start --config ~/kubespray.ovpn
+# on_project_start: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn; sudo openvpn3 session-start --config ~/kubespray.ovpn
 # Run on project start, the first time
 # on_project_first_start: command
 # Run on project start, after the first time
 # on_project_restart: command
 # Run on project exit ( detaching from tmux session )
-on_project_exit: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn
+# on_project_exit: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn
 # Run on project stop
-on_project_stop: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn
+# on_project_stop: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn
 
 # Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
 # pre_window: rbenv shell 2.0.0-p247
@@ -39,19 +40,8 @@ on_project_stop: sudo openvpn3 session-manage --disconnect --config ~/kubespray.
 # attach: false
 
 windows:
-  - k8s-services:
-      root: ~/code/coreweave/k8s-services/dev
+  - webapp:
+      pre: cd webapp
       panes:
         - git pull --all
-  - cloud-console:
-      root: ~/code/coreweave/cloud-console
-      panes:
-        - git pull --all
-  - cloud-app:
-      root: ~/code/coreweave/cloud-app
-      panes:
-        - git pull --all
-  - k8s-billing:
-      root: ~/code/coreweave/k8s-billing
-      panes:
-        - git pull --all
+
