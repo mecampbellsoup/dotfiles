@@ -1,4 +1,4 @@
-# ~/.config/tmuxinator/k8s-services.yml
+# ~/.config/tmuxinator/swarf.yml
 
 name: swarf
 root: ~/code/swarf
