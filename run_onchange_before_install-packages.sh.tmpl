@@ -23,17 +23,14 @@ curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffo
 {{ else if eq .chezmoi.os "darwin" -}}
 brew bundle --no-lock --file=/dev/stdin <<EOF
 cask "google-chrome"
+cask "visual-studio-code"
 brew "tmux"
 brew "git"
 brew "the_silver_searcher"
 brew "fzf"
 brew "gh"
+brew "skaffold"
 EOF
-
-# For macOS on ARMv8 (arm64)
-curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-darwin-$(/usr/bin/arch) && \
-  sudo install skaffold /usr/local/bin/ && \
-  rm -f skaffold
 {{ end -}}
 
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
