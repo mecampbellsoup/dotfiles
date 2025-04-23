@@ -38,6 +38,10 @@ Plug 'mattn/emmet-vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'lifepillar/pgsql.vim'
 Plug 'chr4/nginx.vim'
+" fzf
+" https://github.com/junegunn/fzf/blob/master/README-VIM.md
+" set rtp+=/opt/homebrew/opt/fzf
+Plug '/opt/homebrew/opt/fzf'
 
 " Ruby-specific Vim plugin(s)
 Plug 'vim-ruby/vim-ruby'
@@ -207,7 +211,4 @@ colorscheme solarized
 set autoread
 
 set maxmempattern=2000
-
-" fzf
-set rtp+=/opt/homebrew/opt/fzf
 
