@@ -159,3 +159,6 @@ export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 # 1password
 source $HOME/.config/op/plugins.sh
 
+
+# uv
+source <(uv completion zsh)
