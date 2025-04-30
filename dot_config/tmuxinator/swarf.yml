@@ -41,7 +41,7 @@ tmux_detached: false
 
 windows:
   - webapp:
-      pre: cd webapp
+      pre: cd webapp-fasthtml
       panes:
         - git pull --all
 
