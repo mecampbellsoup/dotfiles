@@ -161,4 +161,5 @@ source $HOME/.config/op/plugins.sh
 
 
 # uv
-source <(uv completion zsh)
+eval "$(uv generate-shell-completion zsh)"
+
