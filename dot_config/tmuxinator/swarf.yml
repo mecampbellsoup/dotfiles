@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/swarf.yml
 
 name: swarf
-root: ~/code/swarf
+root: ~/code/swarf/webapp
 tmux_detached: false
 # Optional tmux socket
 # socket_name: foo
@@ -41,7 +41,7 @@ tmux_detached: false
 
 windows:
   - webapp:
-      pre: cd webapp-fasthtml
+      pre: source .venv/bin/activate
       panes:
         - git pull --all
 
