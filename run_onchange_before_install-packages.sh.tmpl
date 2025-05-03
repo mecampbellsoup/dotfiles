@@ -5,6 +5,7 @@ sudo apt install tmux
 sudo apt install git
 sudo apt install silversearcher-ag
 sudo apt install fzf
+sudo apt install direnv
 
 # For Linux x86_64 (amd64)
 curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
@@ -30,6 +31,7 @@ brew "the_silver_searcher"
 brew "fzf"
 brew "gh"
 brew "skaffold"
+brew "direnv"
 EOF
 {{ end -}}
 
@@ -43,4 +45,8 @@ gem install tmuxinator
 # https://github.com/pyenv/pyenv#installation
 curl https://pyenv.run | bash
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+# https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+# https://docs.astral.sh/uv/getting-started/installation/
+curl -LsSf https://astral.sh/uv/install.sh | sh

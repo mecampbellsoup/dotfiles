@@ -22,7 +22,7 @@ tmux_detached: false
 # on_project_stop: sudo openvpn3 session-manage --disconnect --config ~/kubespray.ovpn
 
 # Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
-pre_window: source .venv/bin/activate
+# pre_window: source .venv/bin/activate
 
 # Pass command line options to tmux. Useful for specifying a different tmux.conf.
 # tmux_options: -f ~/.tmux.mac.conf
