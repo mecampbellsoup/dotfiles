@@ -41,7 +41,6 @@ pre_window: source .venv/bin/activate
 
 windows:
   - webapp:
-      pre: source .venv/bin/activate
       panes:
         - git pull --all
 
