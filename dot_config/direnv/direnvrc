@@ -1,4 +1,4 @@
 function use_venv() {
-  uv venv
+  uv sync
   source .venv/bin/activate
 }
