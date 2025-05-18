@@ -27,3 +27,6 @@
   helper = !gh auth git-credential
 [fetch]
   prune = true
+[init]
+  templateDir = ~/.git-template
+
