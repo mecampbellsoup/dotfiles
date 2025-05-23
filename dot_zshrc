@@ -162,6 +162,7 @@ source $HOME/.config/op/plugins.sh
 
 # uv
 eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
 
 # python
 export PYTHONDONTWRITEBYTECODE=1
