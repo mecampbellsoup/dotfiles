@@ -72,7 +72,7 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(ssh-agent docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1 fzf direnv)
+plugins=(ssh-agent docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1 fzf direnv nvm)
 if [[ "$OSTYPE" == "darwin"* ]]; then
   plugins+=(brew macos)
 fi
