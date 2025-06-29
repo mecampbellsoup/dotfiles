@@ -15,5 +15,3 @@ fi
 
 alias cm="chezmoi"
 
-# Claude (Anthropic)
-alias claude="$HOME/.claude/local/claude"
