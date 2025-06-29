@@ -168,5 +168,5 @@ eval "$(uvx --generate-shell-completion zsh)"
 export PYTHONDONTWRITEBYTECODE=1
 
 # Claude (Anthropic)
-export PATH="$PATH:~/.claude/local"
+export PATH="$PATH:$HOME/.claude/local"
 
