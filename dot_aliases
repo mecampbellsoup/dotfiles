@@ -15,6 +15,3 @@ fi
 
 alias cm="chezmoi"
 
-# Claude Code
-alias claude="$HOME/.claude/local/claude"
-
