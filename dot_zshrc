@@ -74,7 +74,7 @@ HIST_STAMPS="yyyy-mm-dd"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(ssh-agent docker zsh-syntax-highlighting history git zsh-completions tmux tmuxinator yarn kubectl kube-ps1 fzf direnv nvm)
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  plugins+=(brew macos)
+  plugins+=(brew macos 1password)
 fi
 
 autoload -U compinit && compinit
@@ -167,6 +167,6 @@ eval "$(uvx --generate-shell-completion zsh)"
 # python
 export PYTHONDONTWRITEBYTECODE=1
 
-# Claude (Anthropic)
-export PATH="$PATH:$HOME/.claude/local"
+# Claude Code (Anthropic)
+export PATH="$PATH:$HOME/.claude/local/claude"
 
