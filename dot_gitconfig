@@ -2,6 +2,7 @@
 [user]
   name = Matt Campbell
   email = mecampbell25@gmail.com
+  initials = mc
 [core]
   editor = vim
   excludesfile = ~/.gitignore_global
