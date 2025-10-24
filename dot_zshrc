@@ -1,4 +1,5 @@
 # If you come from bash you might have to change your $PATH.
+#
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export EDITOR=vim
 
@@ -130,10 +131,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# nvm is loaded by oh-my-zsh plugin above
 
 # history
 HISTFILE="$HOME/.zsh_history"
@@ -167,6 +165,5 @@ eval "$(uvx --generate-shell-completion zsh)"
 # python
 export PYTHONDONTWRITEBYTECODE=1
 
-# Claude Code (Anthropic)
-export PATH="$PATH:$HOME/.claude/local"
+# Claude Code (Anthropic) - using global installation via npm
 
