@@ -165,5 +165,3 @@ eval "$(uvx --generate-shell-completion zsh)"
 # python
 export PYTHONDONTWRITEBYTECODE=1
 
-# Claude Code (Anthropic) - using global installation via npm
-
