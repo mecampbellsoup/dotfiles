@@ -1,5 +1,5 @@
 # Keep PATH entries unique (fixes macOS path_helper duplication)
-typeset -U path
+typeset -U PATH
 
 # If you come from bash you might have to change your $PATH.
 #
