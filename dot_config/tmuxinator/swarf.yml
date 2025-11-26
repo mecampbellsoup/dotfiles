@@ -42,5 +42,5 @@ tmux_detached: false
 windows:
   - webapp:
       panes:
-        - git pull --all
+        - op run -- git pull --all
 
