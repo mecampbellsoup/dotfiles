@@ -43,4 +43,15 @@ windows:
   - webapp:
       panes:
         - op run -- git pull --all
-
+  - webapp-1:
+      root: ~/code/swarf/webapp-dev
+      panes:
+        - op run -- git pull --all
+  - webapp-2:
+      root: ~/code/swarf/webapp-dev-2
+      panes:
+        - op run -- git pull --all
+  - webapp-3:
+      root: ~/code/swarf/webapp-dev-3
+      panes:
+        - op run -- git pull --all
