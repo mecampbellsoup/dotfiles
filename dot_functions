@@ -2,3 +2,13 @@
 timestamp() {
   date +%s
 }
+
+# Wrap openclaw update to reinstall missing extension deps afterward
+# See: https://github.com/openclaw/openclaw/issues/48244
+openclaw-update() {
+  command openclaw update "$@" && \
+    echo "Reinstalling extension deps (lancedb)..." && \
+    /opt/homebrew/bin/npm install --prefix /opt/homebrew/lib/node_modules/openclaw @lancedb/lancedb@"^0.26.2" && \
+    echo "Done. Restarting gateway..." && \
+    command openclaw gateway restart
+}
