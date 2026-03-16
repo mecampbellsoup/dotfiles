@@ -4,7 +4,7 @@ export PATH="/opt/homebrew/sbin:$PATH"
 # User-defined bin scripts
 export PATH="$HOME/.bin:$PATH"
 
-# poetry
+# pipx, poetry, and other user-installed tools
 export PATH="$HOME/.local/bin:$PATH"
 
 # chezmoi

@@ -105,7 +105,7 @@ fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
   if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-    fpath=(/usr/local/share/zsh-completions $fpath)
+    fpath=(/opt/homebrew/share/zsh-completions $fpath)
   fi
 fi
 
@@ -150,7 +150,6 @@ setopt APPEND_HISTORY        # append to history file (Default)
 setopt HIST_NO_STORE         # Don't store history commands
 setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
 
-# add to # ~/.zshrc
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 
 # 1password
@@ -164,6 +163,7 @@ eval "$(uvx --generate-shell-completion zsh)"
 # python
 export PYTHONDONTWRITEBYTECODE=1
 
+
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
@@ -173,6 +173,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 alias claude-mem='$HOME/.bun/bin/bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# OpenClaw Completion
+source "/Users/mcampbell/.openclaw/completions/openclaw.zsh"
