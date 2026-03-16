@@ -82,6 +82,11 @@ autoload -U compinit && compinit
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ssh-agent
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
+# nvm: auto-switch node version on cd based on .nvmrc
+# ~/.nvmrc = "system" (brew node), swarf worktrees = "24.13.0"
+zstyle ':omz:plugins:nvm' autoload true
+zstyle ':omz:plugins:nvm' silent-autoload true
+
 source $ZSH/oh-my-zsh.sh
 
 # Load the shell dotfiles, and then some:
