@@ -3,6 +3,8 @@
 name: swarf
 root: ~/code/swarf/webapp
 tmux_detached: false
+
+on_project_start: cd ../business-vault && op run -- git pull
 # Optional tmux socket
 # socket_name: foo
 
