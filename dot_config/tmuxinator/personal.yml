@@ -1,0 +1,19 @@
+# ~/.config/tmuxinator/personal.yml
+
+name: personal
+root: ~/personal
+tmux_detached: false
+
+on_project_start: cd ~/code/finance && make sync
+
+windows:
+  - personal:
+      root: ~/personal
+      panes:
+        - ''
+  - finance:
+      root: ~/code/finance
+      layout: main-vertical
+      panes:
+        - uv run python fasthtml_app.py
+        - ''
