@@ -13,7 +13,7 @@ windows:
         - ''
   - finance:
       root: ~/code/finance
-      layout: main-vertical
+      layout: even-vertical
       panes:
         - uv run python fasthtml_app.py
         - ''
