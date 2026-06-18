@@ -87,6 +87,10 @@ zstyle :omz:plugins:ssh-agent agent-forwarding yes
 zstyle ':omz:plugins:nvm' autoload true
 zstyle ':omz:plugins:nvm' silent-autoload true
 
+# Prevent DEBUG (exported by direnv/dotenv from .env) from triggering
+# kube-ps1's xtrace guard: [[ -n $DEBUG ]] && set -x
+unset DEBUG
+
 source $ZSH/oh-my-zsh.sh
 
 # Load the shell dotfiles, and then some:
@@ -166,4 +170,7 @@ eval "$(uvx --generate-shell-completion zsh)"
 
 # python
 export PYTHONDONTWRITEBYTECODE=1
+
+# OpenClaw Completion
+source "/Users/mcampbell/.openclaw/completions/openclaw.zsh"
 
