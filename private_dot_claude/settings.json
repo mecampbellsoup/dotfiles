@@ -1,0 +1,81 @@
+{
+  "skillListingBudgetFraction": 0.02,
+  "permissions": {
+    "allow": [
+      "Bash(sed -n *)",
+      "Bash(gog *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opusplan",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pkill -f 'claude.*--output-format stream-json' 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); dir=$(echo \"$input\" | jq -r '.workspace.current_dir'); branch=$(git -C \"$dir\" rev-parse --abbrev-ref HEAD 2>/dev/null); model=$(echo \"$input\" | jq -r '.model.display_name'); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); printf '\\033[36m%s\\033[0m' \"$(basename \"$dir\")\"; [ -n \"$branch\" ] && printf ' \\033[35mon\\033[0m \\033[33m%s\\033[0m' \"$branch\"; printf ' \\033[32m%s\\033[0m' \"$model\"; [ -n \"$remaining\" ] && printf ' \\033[2m(%s%% left)\\033[0m' \"$remaining\"; echo"
+  },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "swarf-toolkit@swarf-skills": true,
+    "watch@claude-video": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "swarf-skills": {
+      "source": {
+        "source": "github",
+        "repo": "Swarf-AI/webapp",
+        "sparsePaths": [
+          ".claude-plugin",
+          "plugins"
+        ]
+      },
+      "autoUpdate": true
+    },
+    "claude-video": {
+      "source": {
+        "source": "github",
+        "repo": "bradautomates/claude-video"
+      }
+    }
+  },
+  "effortLevel": "medium",
+  "autoDreamEnabled": true,
+  "skipWorkflowUsageWarning": true,
+  "editorMode": "normal",
+  "preferredNotifChannel": "iterm2",
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true,
+  "mcpServers": {
+    "logfire": {
+      "type": "http",
+      "url": "https://logfire-us.pydantic.dev/mcp"
+    }
+  }
+}

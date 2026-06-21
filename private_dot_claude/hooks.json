@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": {
+          "tool_name": "Grep|Glob|Bash"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/mcampbell/.npm/_npx/e46929201c1128dd/node_modules/gitnexus/hooks/claude/gitnexus-hook.cjs\"",
+            "timeout": 8000
+          }
+        ]
+      }
+    ]
+  }
+}
