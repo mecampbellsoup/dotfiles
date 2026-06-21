@@ -1,6 +1,6 @@
 ---
 name: hermes-handoff
-description: Hand off past conversation context to Hermes Agent (@Hermes). Use when the user wants Hermes caught up on something — Slack permalinks, "share this thread with hermes", "get hermes up to speed on X", or any reference to a past conversation across Slack, Gmail, or iMessage.
+description: Hand off past conversation context to Hermes Agent (@Hermes), searching across Slack, Gmail, and iMessage to find it. Use when the user wants Hermes caught up on something — Slack permalinks, "share this thread with hermes", "get hermes up to speed on X", or any reference to a past conversation in any channel.
 user_invocable: true
 ---
 
