@@ -15,6 +15,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - There is no `gog gmail message get` — single message = `gog gmail get <id> --json` (or `gog gmail raw <id>` for lossless API JSON)
 - Plain output truncates bodies and drops CC — use `--json` + base64 decode
 - Account alias: use full email (`mecampbell25@gmail.com`), not short alias
+- **HTML order confirmation emails (SharkNinja, Amazon, retailers):** product name is buried past a CSS preamble (~2,500 chars of style tags + `&zwnj;` spam). Read `text[2000:6000]`, not `text[:3000]` — or strip `<style>` blocks first before stripping all tags.
 
 **Drafting rules:**
 - **Pre-draft gate (run before writing the first word):**
@@ -92,6 +93,9 @@ gog -a <account> gmail draft create \
 
 ## Workflow
 
+- **Orient before acting.** When a personal topic surfaces (vendor, project, person, decision), state your working model before making any claim or taking any action: "Here's what I think I know: [X] — is that current?" Treat memory entries and living docs as last-known-state hypotheses, not ground truth. Two questions to answer before proceeding: (1) is my knowledge accurate? (2) is this topic still open? If the answer to #2 is no — decision made, relationship ended, task closed — the right move is cleanup, not an update. Don't surface closed topics as open tasks.
+
+- Before designing anything new, name the existing mechanism closest to what you need — extend it if possible, build something new only if it genuinely can't stretch.
 - Propose changes before implementing — wait for approval
 - When a directive is ambiguous, stop and ask rather than guessing — especially for irreversible actions like sending messages or submitting forms
 - On command failures, check in with me before retrying
@@ -100,6 +104,8 @@ gog -a <account> gmail draft create \
 - When waiting for remote/external results (CI, deploys, GitHub checks): poll in 10-15s intervals, don't sleep for the full expected duration. For container log reads (test results, build output), use the project's hardened monitoring snippet — one read, no sleep prefix, no polling loop.
 - Capture decisions as they happen — don't leave them only in conversation. Write to the appropriate place: code comment (WHY), PLAN doc update, memory, or issue.
 - Before committing in any repo, verify staged files with `git diff --staged --stat` — especially when other work is in progress in the same repo. Staged files from unrelated work get swept into commits silently.
+- Always run `/plan-implementation` fully after `/design-flow` — never shortcut from design to execution. If gaps emerge between what `/design-flow` produced and what `/plan-implementation` generates, treat that as signal worth investigating, not noise to skip past.
+- For financial or legal findings that will be communicated to professionals (accountants, lawyers), verify from the primary source document before drafting — never rely on an agent or intermediate summary alone.
 
 ## Branch Naming
 
