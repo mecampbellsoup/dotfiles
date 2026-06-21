@@ -93,6 +93,8 @@ gog -a <account> gmail draft create \
 
 ## Workflow
 
+- **Orient before acting.** When a personal topic surfaces (vendor, project, person, decision), state your working model before making any claim or taking any action: "Here's what I think I know: [X] — is that current?" Treat memory entries and living docs as last-known-state hypotheses, not ground truth. Two questions to answer before proceeding: (1) is my knowledge accurate? (2) is this topic still open? If the answer to #2 is no — decision made, relationship ended, task closed — the right move is cleanup, not an update. Don't surface closed topics as open tasks.
+
 - Before designing anything new, name the existing mechanism closest to what you need — extend it if possible, build something new only if it genuinely can't stretch.
 - Propose changes before implementing — wait for approval
 - When a directive is ambiguous, stop and ask rather than guessing — especially for irreversible actions like sending messages or submitting forms
