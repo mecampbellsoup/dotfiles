@@ -104,6 +104,7 @@ gog -a <account> gmail draft create \
 - When a search/lookup returns nothing, broaden it before changing approach — and verify each step incrementally on multi-step operations
 - When waiting for remote/external results (CI, deploys, GitHub checks): poll in 10-15s intervals, don't sleep for the full expected duration. For container log reads (test results, build output), use the project's hardened monitoring snippet — one read, no sleep prefix, no polling loop.
 - Capture decisions as they happen — don't leave them only in conversation. Write to the appropriate place: code comment (WHY), PLAN doc update, memory, or issue.
+- **Doc routing — where things go:** universal working rules → `~/.claude/CLAUDE.md` (global); repo-specific facts/commands → that repo's `CLAUDE.md` (never generic best-practices — a project file is project-specific only); team-shared vs personal/machine-local within a repo → `CLAUDE.md` vs `.claude.local.md`/`settings.local.json`; evolving real-world state → living doc (`~/personal/` or a repo knowledge layer); atomic facts & behavioral corrections → memory (`feedback`/`project`/`reference`/`user`); harness-enforced automation & permissions → `settings.json` (user vs project) via `/update-config`.
 - Before committing in any repo, verify staged files with `git diff --staged --stat` — especially when other work is in progress in the same repo. Staged files from unrelated work get swept into commits silently.
 - Always run `/plan-implementation` fully after `/design-flow` — never shortcut from design to execution. If gaps emerge between what `/design-flow` produced and what `/plan-implementation` generates, treat that as signal worth investigating, not noise to skip past.
 - For financial or legal findings that will be communicated to professionals (accountants, lawyers), verify from the primary source document before drafting — never rely on an agent or intermediate summary alone.
@@ -114,7 +115,7 @@ Use initials `mc` for branches: `mc/323-fix-auth-flow`
 
 ## Codex Sync
 
-**Rule:** Every CLAUDE.md that is NOT inside a `.claude/` directory gets a mirrored AGENTS.md — direct copy, no substitutions — except third-party repos you can't commit to. Run this sync whenever CLAUDE.md changes in any owned repo.
+**Rule:** Every CLAUDE.md that is NOT inside a `.claude/` directory gets a mirrored AGENTS.md — direct copy, no substitutions — except third-party repos you can't commit to. Run this sync whenever CLAUDE.md changes in any owned repo. **Exception (explicit inclusion):** the global user file `~/.claude/CLAUDE.md` IS mirrored to `~/.claude/AGENTS.md` so Codex reads the same global rules, despite living in `.claude/`. Per-repo `.claude/CLAUDE.md` files (e.g. skill-adjacent) are NOT mirrored.
 
 **Repos needing direct-copy sync** (pattern: `cp CLAUDE.md AGENTS.md && git add AGENTS.md && git commit -m "sync AGENTS.md: ..."`):
 - `~/personal/`
