@@ -51,7 +51,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - All `--json` output is JSONL (one object per line) — parse line-by-line, never `json.load`
 - Read messages: `imsg history --chat-id <id> --limit N` (there is no `messages` subcommand; plain output is a readable transcript)
 - Send: `imsg send --chat-id <id> --text "..."`
-- `imsg search` is broken — search content by extracting `attributedBody` from the sqlite DB via Python
+- `imsg search` is broken — search content by extracting `attributedBody` from the sqlite DB via Python. **Don't filter `WHERE handle_id IS NOT NULL`** — sent messages have NULL `handle_id`, so that filter silently drops everything *you* sent (real miss: a `LIKE '%electric%'` returned zero hits because the match was in Matt's own sent message; the thread was only found by dumping a date window). Filter on `attributedBody IS NOT NULL`, and add a `date BETWEEN` window when you know roughly when.
 - Before drafting, read recent sent messages in that chat and match style (short bursts, casual)
 - Same draft → approval → send gate as email — never send without "send it"
 
@@ -95,6 +95,7 @@ gog -a <account> gmail draft create \
 
 - **Orient before acting.** When a personal topic surfaces (vendor, project, person, decision), state your working model before making any claim or taking any action: "Here's what I think I know: [X] — is that current?" Treat memory entries and living docs as last-known-state hypotheses, not ground truth. Two questions to answer before proceeding: (1) is my knowledge accurate? (2) is this topic still open? If the answer to #2 is no — decision made, relationship ended, task closed — the right move is cleanup, not an update. Don't surface closed topics as open tasks.
 
+- **State theory, then prove.** When you form a theory about why something behaves as it does, state it explicitly (falsifiable) and design + run an experiment/check to prove or refute it — reach for `/prove` or `/evidence` — *before* acting on it (editing code, reporting it as fact). Evidence merely consistent with a theory is not proof; the instrument may need a small code change, but that is building the test, not the fix.
 - Before designing anything new, name the existing mechanism closest to what you need — extend it if possible, build something new only if it genuinely can't stretch.
 - Propose changes before implementing — wait for approval
 - When a directive is ambiguous, stop and ask rather than guessing — especially for irreversible actions like sending messages or submitting forms
