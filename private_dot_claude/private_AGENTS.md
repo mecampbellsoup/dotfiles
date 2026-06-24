@@ -22,12 +22,15 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
   1. Extract counterparty's own vocabulary from the thread — use their terms, not generic ones
   2. All cost/fee references: institutional framing ("Focus fees," "what I pay") — never "your fee"
   3. For each question you plan to ask: can the recipient actually answer it? Flag rhetorical or presupposing questions before drafting
+  4. If the topic has a living doc (`~/personal/<topic>.md`), read it first — don't draft questions already answered there
+  5. If a question is about a vendor's public pricing or documented scope, verify via web search before listing it as open
 - **Verifying recipient addresses**: Never guess email format (e.g. `firstname.lastname@domain.com`). Before sending to a named individual, confirm via `gog -a <account> gmail search "from:domain.com in:anywhere"`. Name-keyword searches miss people whose email uses initials (`lpelley@` not `lance.pelley@`). Domain search first, always.
 - Reply-all by default: CC everyone already on the thread, plus anyone else who is a relevant party to the subject matter. If you're not confident someone should be included, verify rather than omit. **Before creating each reply draft, extract the CC field from the thread JSON — never assume it's empty, never invent recipients.** (See § gog Gmail Drafts below for the extraction snippet and full draft creation template.)
 - Reply on the most recent thread for the topic — check thread dates first
 - For reply drafts: `--reply-to-message-id <last-msg-id>` + `--quote` + `--cc <extracted>`. To revise the body, delete and recreate — `draft update --body` silently drops the quote. Dollar signs in `--body` get eaten by bash (`$8M` → `M`) — write body to `/tmp/body.txt` and pass `--body "$(cat /tmp/body.txt)"`.
 - **`--quote` CID failure:** Before using `--quote`, scan whether the email has CID attachments: `gog gmail raw <msg-id> | grep -c 'Content-ID:'`. If count > 0, skip `--quote` entirely — go straight to manual plain-text extraction and prepend `> ` to each line. Never skip the quote. Use `--body-file /tmp/reply.txt` (body + quote combined) instead of `--quote`.
 - **After sending:** `gog draft send` sometimes leaves a stale draft artifact. Verify the send via thread message count (`thread get --json` → `len(messages)` increased) and delete any leftover draft.
+- **Mail.app + API drafts:** `gog draft create` drafts behave identically to native Mail.app drafts when `--quote` is included: they sync to the Drafts mailbox (~30s IMAP), thread correctly with the original, and show Charlie's email collapsed below ("See More from X") which expands inline. Without `--quote`, the draft is bare — no quoted original — which looks orphaned even though threading is technically correct. Always use `--quote` for reply drafts (after the CID check). They do NOT appear when viewing the original from Inbox — but neither do native drafts. **If `draft send` 404s:** Mail.app consumed the draft ID — don't investigate, recreate immediately and send in one compound step (`gog ... draft create ... && gog ... draft send <new_id>`). **If Matt says he edited a draft in Mail.app:** the old message ID is stale — run `gog -a <account> gmail draft list --json` first to get the current draft ID before reading or acting on it.
 - **Terminology:** before drafting a reply, extract the counterparty's own terms from the thread — use their vocabulary, not inferred labels.
 - Never send without explicit approval ("send it"). Draft → show → wait; expect 1–3 revision rounds
 - Only include facts the user stated or directly evidenced in the thread — no inferred context
@@ -107,7 +110,7 @@ gog -a <account> gmail draft create \
 - **Doc routing — where things go:** universal working rules → `~/.claude/CLAUDE.md` (global); repo-specific facts/commands → that repo's `CLAUDE.md` (never generic best-practices — a project file is project-specific only); team-shared vs personal/machine-local within a repo → `CLAUDE.md` vs `.claude.local.md`/`settings.local.json`; evolving real-world state → living doc (`~/personal/` or a repo knowledge layer); atomic facts & behavioral corrections → memory (`feedback`/`project`/`reference`/`user`); harness-enforced automation & permissions → `settings.json` (user vs project) via `/update-config`.
 - Before committing in any repo, verify staged files with `git diff --staged --stat` — especially when other work is in progress in the same repo. Staged files from unrelated work get swept into commits silently.
 - Always run `/plan-implementation` fully after `/design-flow` — never shortcut from design to execution. If gaps emerge between what `/design-flow` produced and what `/plan-implementation` generates, treat that as signal worth investigating, not noise to skip past.
-- For financial or legal findings that will be communicated to professionals (accountants, lawyers), verify from the primary source document before drafting — never rely on an agent or intermediate summary alone.
+- For financial or legal findings that will be communicated to anyone (family or professionals) or used to draft correspondence, verify from the primary source document before drafting — never rely on an agent, an intermediate summary, or your own recollection of the law/rules alone. This applies to domain claims stated confidently to a layperson audience too, not just formal advisor correspondence.
 
 ## Branch Naming
 
@@ -129,5 +132,5 @@ Use initials `mc` for branches: `mc/323-fix-auth-flow`
 python3 ~/.codex/skills/migrate-to-codex/scripts/migrate-to-codex.py \
   --source ~/code/swarf/webapp --target ~/.codex
 ```
-This syncs 11 project skills + AGENTS.md with Codex substitutions. Run after significant CLAUDE.md or skill changes.
+This syncs 11 project skills + AGENTS.md with Codex substitutions. Run after significant CLAUDE.md or skill changes. **Scope is `.claude/skills/` only** — the script globs `.claude/skills/*/SKILL.md` and does not touch `plugins/swarf-toolkit/skills/`. Edits to swarf-toolkit *plugin* skills (`/tdd`, `/commit-changes`, etc.) are distributed via the marketplace, not this script, so there's nothing to run for them.
 
