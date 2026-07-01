@@ -14,10 +14,14 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 **gog gotchas (recurring):**
 - There is no `gog gmail message get` — single message = `gog gmail get <id> --json` (or `gog gmail raw <id>` for lossless API JSON)
 - Plain output truncates bodies and drops CC — use `--json` + base64 decode
+- **`--json` shape:** `gmail search` returns `{threads:[{id,date,from,subject,labels,messageCount}]}` — flat fields, NO payload (don't look for `messages`/headers there). Full content via `gmail thread get <id> --json` → `thread.messages[].payload.headers` (read each header's `.get('value')` — bare `['value']` KeyErrors on some headers) and base64-decode `body.data` walking `parts`.
 - Account alias: use full email (`mecampbell25@gmail.com`), not short alias
+- **Attachment flag (drafting):** `--attach` not `--attachment` — wrong flag silently fails draft creation
+- **Downloading an attachment:** `gog -a <acct> gmail attachment <messageId> <attachmentId> --out <path>` — both IDs are *positional* (not `--attachment-id`), and the save flag is `--out` (not `-o`). Get the attachmentId from the message payload parts (`body.attachmentId`).
 - **HTML order confirmation emails (SharkNinja, Amazon, retailers):** product name is buried past a CSS preamble (~2,500 chars of style tags + `&zwnj;` spam). Read `text[2000:6000]`, not `text[:3000]` — or strip `<style>` blocks first before stripping all tags.
 
 **Drafting rules:**
+- **Summarizing doc changes in an email:** extract the actual language from the source doc — don't paraphrase from memory. The doc and the email body are separate files; a fix in one doesn't propagate to the other.
 - **Pre-draft gate (run before writing the first word):**
   1. Extract counterparty's own vocabulary from the thread — use their terms, not generic ones
   2. All cost/fee references: institutional framing ("Focus fees," "what I pay") — never "your fee"
@@ -47,6 +51,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - Zero results → broaden, never narrow. Split compound words: "metrogroup" → try "metro" and "group"
 - Add `in:anywhere` when results seem incomplete (catches trash/spam)
 - Find all threads on a vendor topic before drafting — helpdesk replies come from subdomains, not `vendor.com`
+- **Prior session found an email via thread ID?** Extract the thread ID from that session's JSONL first (`grep -o '"thread_id":"[^"]*"' ~/.claude/projects/.../session.jsonl` or look at prior Bash tool calls), then `gog gmail thread get <id>` directly. Keyword searches for retailer/vendor emails frequently return 0 results even when the email exists.
 
 ## iMessage (imsg)
 
