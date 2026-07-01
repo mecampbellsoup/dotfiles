@@ -9,13 +9,15 @@ Search across Slack, Gmail, and iMessage to surface what was said about a topic,
 
 ## Step 0: Check living docs first
 
-Before searching any channel, check if a living doc exists for this topic in `~/personal/`. These are maintained summaries that are often more complete and faster than raw message search.
+Before searching any channel, check if a living doc exists for this topic — in `~/personal/` (personal living docs) **and, when working inside a project repo, that repo's own doc web** (e.g. business-vault's `business/`, `projects/`, `orgs/`; a code repo's `docs/`). These are maintained summaries that are often more complete and faster than raw message search.
 
 ```bash
 ls ~/personal/ | grep -i <keyword>
+# if inside a project repo, also grep its content (not just filenames):
+grep -ril <keyword> <repo-root> --include="*.md"
 ```
 
-If a relevant doc exists, read it. It may fully answer the question — skip channel search entirely, or use it to confirm/extend what you find in messages.
+If a relevant doc exists, read it. It may fully answer the question — skip channel search entirely, or use it to confirm/extend what you find in messages. Grep **content**, not just filenames — a topic can live inside a broader doc (e.g. a "Tax" section inside `operations.md`) without the keyword appearing in the filename.
 
 Living docs live at paths like `~/personal/transformer-table.md`, `~/personal/condo-gc.md`, `~/personal/health-insurance.md`. When in doubt, `ls ~/personal/` and scan the list for anything topically related.
 
