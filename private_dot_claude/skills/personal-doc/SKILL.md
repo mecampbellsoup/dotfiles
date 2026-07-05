@@ -1,12 +1,14 @@
 ---
 name: personal-doc
-description: Create or update a living doc in ~/personal/ for any substantive personal topic — health insurance, GC search, trip planning, investments, home projects, vendor negotiations, purchases, decisions, etc. PROACTIVELY invoke this after any action that changes real-world state — email sent, site visit done, appointment confirmed, item ordered/returned, decision made — without waiting to be asked. Also invoke when Matt says "update X", "log that", "track this", "mark X done", or "note that". Default to a living doc for anything involving a real-world entity or evolving state. Memory is for trivial atomic facts only; behavioral corrections go to ~/.claude/CLAUDE.md. The goal is that completing an action and updating the doc feel like one step, not two.
+description: Create or update a living doc in ~/personal/ for any substantive personal topic — health insurance, GC search, trip planning, investments, home projects, vendor negotiations, purchases, decisions, etc. PROACTIVELY invoke this after any action that changes real-world state — email sent, site visit done, appointment confirmed, item ordered/returned, decision made — without waiting to be asked. Also invoke when Matt says "update X", "log that", "track this", "mark X done", or "note that." This applies just as much to patching a few fields into an already-existing doc as to creating a new one — "log these findings," "add this to the doc," or "update the Now table" are all triggers, not just first-time creation. Default to a living doc for anything involving a real-world entity or evolving state. Memory is for trivial atomic facts only; behavioral corrections go to ~/.claude/CLAUDE.md. The goal is that completing an action and updating the doc feel like one step, not two. Do not substitute a direct Edit/Write tool call on a ~/personal/<topic>.md file for this skill, even for a small, well-understood patch — invoke the skill first.
 user_invocable: true
 ---
 
 # Personal Doc
 
 Structured living docs in `~/personal/` for personal topics that are too multi-dimensional for a flat memory blob. The file is always source of truth; memory is just the pointer.
+
+**This skill is the only path to editing a `~/personal/<topic>.md` file — not a suggestion to consider alongside a direct Edit/Write call, but the required path.** Reaching for Edit/Write directly, even on a change that seems small or fully understood, skips the memory-hygiene step and the Now/Coming Up/Decide/Log conventions this skill enforces, and the doc's structure drifts over time as a result. If the task is "patch these findings into an existing doc," that's still a full invocation of this skill's Update flow, not a shortcut around it.
 
 ## The gate
 
