@@ -1,6 +1,6 @@
 ---
 name: recall
-description: Search across all communication channels — Slack, Gmail (both personal and work accounts), iMessage, and the local Photos library (OCR of photographed documents) — to answer "what happened with X" questions. Use this skill whenever the user wants to find a past conversation, recall what was decided, check what someone said, dig up context from any medium, or locate a photo/scan of a document they took. Triggers on phrases like "what happened with", "what did we decide about", "did I talk to X about", "what was the deal with", "remind me about", "check my messages/emails/texts about", "find the photo/scan of", or any time the user references something they half-remember and wants to track down. Also use when another skill (like hermes-handoff) needs to resolve a natural-language reference to a past conversation.
+description: Search across all communication channels — Slack, Gmail (both personal and work accounts), iMessage, LinkedIn DMs (logged-in browser), and the local Photos library (OCR of photographed documents) — to answer "what happened with X" questions. Use this skill whenever the user wants to find a past conversation, recall what was decided, check what someone said, dig up context from any medium, or locate a photo/scan of a document they took. Triggers on phrases like "what happened with", "what did we decide about", "did I talk to X about", "what was the deal with", "remind me about", "check my messages/emails/texts about", "find the photo/scan of", or any time the user references something they half-remember and wants to track down. Also use when another skill (like hermes-handoff) needs to resolve a natural-language reference to a past conversation.
 ---
 
 # Recall
@@ -21,6 +21,18 @@ If a relevant doc exists, read it. It may fully answer the question — skip cha
 
 Living docs live at paths like `~/personal/transformer-table.md`, `~/personal/condo-gc.md`, `~/personal/health-insurance.md`. When in doubt, `ls ~/personal/` and scan the list for anything topically related.
 
+## Step 0.5: Check past Claude Code sessions
+
+A prior session often already found and synthesized the answer — mining its transcript beats re-searching every channel from scratch. Cheap probe before any channel search:
+
+```bash
+grep -il '<keyword>' ~/.claude/projects/<project-dir>/*.jsonl 2>/dev/null
+# empty → broaden to all projects:
+grep -ril '<keyword>' ~/.claude/projects/ --include="*.jsonl" 2>/dev/null | grep -v /subagents/
+```
+
+**The current session always self-matches** — your own query contains the keyword, so filter out the active session's file before treating a hit as prior knowledge. On a hit, extract the relevant exchanges (user messages, assistant syntheses, and tool results containing the keyword) — the `/find-conversation` skill owns the full JSONL parsing protocol and noise filters; use its recipes for anything beyond a simple keyword slice. A transcript hit frequently contains the finished answer (order numbers, prices, decisions, thread IDs) with source attribution already done.
+
 ## Source routing
 
 Read the query for medium signals before searching. Route accordingly:
@@ -29,9 +41,13 @@ Read the query for medium signals before searching. Route accordingly:
 - **"email", "emailed", "gmail", formal/vendor context** → Gmail first; fan out to others if thin
 - **"Slack", "DM", "channel", "Hermes", bot names** → Slack first; fan out to others if thin
 - **"photo", "picture", "scan", "screenshot", "I took a photo of", a sought-after letter/form/document** → Photos library (see below); also fan out to text channels
+- **"our past convo", "we talked about", "last session", "you found", anything Claude itself previously did** → past CC session transcripts first (Step 0.5) — the prior session likely holds the synthesized answer
+- **Founder/professional outreach, networking, investor contact, "reached out to", cold contact with a stranger** → also check LinkedIn DMs (see below); Matt's outreach to founders/professionals frequently includes LinkedIn messages invisible to every CLI channel
 - **No clear signal** → fan out to all three message channels in parallel
 
 When in doubt, fan out. The cost of one extra empty search is lower than missing the answer.
+
+**Before reporting "no other contact" on an outreach/networking topic, check LinkedIn** — a recall that swept Gmail/Slack/iMessage once concluded outreach was email-only when two LinkedIn messages existed.
 
 **When text channels come up empty for a document/letter the user is sure exists, the Photos library is the channel that's usually been missed** — a photo taken but never sent is invisible to iMessage, email, *and* Spotlight. Always run the Photos OCR pass before concluding "it's nowhere."
 
@@ -67,6 +83,13 @@ gog gmail get <id> --json
 Then base64-decode the body field. Plain output silently truncates and drops CC — always use `--json`.
 
 HTML-heavy emails (order confirmations, retailer receipts): the product name is buried past ~2,500 chars of CSS. Read `text[2000:6000]`, not `text[:3000]`.
+
+### LinkedIn (DMs)
+
+No CLI/API access — use the Playwright logged-in browser session (Matt authenticates himself if the session is stale; hand off at the login page). Full extraction patterns in memory: `reference-linkedin-playwright.md`.
+
+- Search: navigate to `linkedin.com/messaging/?searchTerm=<name>` — the conversation list filters to matches
+- Read a thread: click the conversation, extract via `browser_evaluate` over `.msg-s-event-listitem` nodes (snapshot right after navigate returns an empty tree — use evaluate with a ~3s delay instead)
 
 ### iMessage
 

@@ -7,6 +7,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opusplan",
   "hooks": {
     "SessionEnd": [
       {
@@ -25,12 +26,12 @@
   },
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "swarf-toolkit@swarf-skills": true,
-    "watch@claude-video": true
+    "watch@claude-video": true,
+    "firecrawl@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -64,11 +65,15 @@
     }
   },
   "effortLevel": "medium",
+  "tui": "fullscreen",
   "autoDreamEnabled": true,
   "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
   "preferredNotifChannel": "iterm2",
   "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
+  "autoScrollEnabled": false,
+  "showTurnDuration": true,
   "agentPushNotifEnabled": true,
   "mcpServers": {
     "logfire": {
@@ -76,5 +81,5 @@
       "url": "https://logfire-us.pydantic.dev/mcp"
     }
   },
-  "model": "opusplan"
+  "remoteControlAtStartup": true
 }
