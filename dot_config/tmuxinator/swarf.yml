@@ -61,3 +61,7 @@ windows:
       root: ~/code/swarf/webapp-dev-4
       panes:
         - op run -- git pull --all
+  - webapp-5:
+      root: ~/code/swarf/webapp-dev-5
+      panes:
+        - op run -- git fetch --all
