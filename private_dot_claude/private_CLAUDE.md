@@ -22,6 +22,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - **Downloading an attachment:** `gog -a <acct> gmail attachment <messageId> <attachmentId> --out <path>` — both IDs are *positional* (not `--attachment-id`), and the save flag is `--out` (not `-o`). Get the attachmentId from the message payload parts (`body.attachmentId`).
 - **HTML order confirmation emails (SharkNinja, Amazon, retailers):** product name is buried past a CSS preamble (~2,500 chars of style tags + `&zwnj;` spam). Read `text[2000:6000]`, not `text[:3000]` — or strip `<style>` blocks first before stripping all tags.
 - **Formatted (HTML) drafts:** `draft create` supports `--body-html-file <path>` (and `--body-html`) alongside plain `--body` — pass both for a proper multipart/alternative. Plain `--body` alone renders as unformatted text; if Matt says a draft "looks unformatted," recreate it with an HTML body (inline styles, no `<style>` blocks).
+- **Token expired (`invalid_grant: "Token has been expired or revoked"`):** this is an interactive re-auth, not something to retry around. Stop and ask Matt to run `gog auth add <account> --services drive,docs,gmail,calendar` himself (opens a browser) — don't attempt the OAuth flow or guess a fix.
 
 **Drafting rules:**
 - **Summarizing doc changes in an email:** extract the actual language from the source doc — don't paraphrase from memory. The doc and the email body are separate files; a fix in one doesn't propagate to the other.
