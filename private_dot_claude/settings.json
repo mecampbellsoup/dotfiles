@@ -31,7 +31,8 @@
     "skill-creator@claude-plugins-official": true,
     "swarf-toolkit@swarf-skills": true,
     "watch@claude-video": true,
-    "firecrawl@claude-plugins-official": true
+    "firecrawl@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -62,6 +63,12 @@
         "source": "github",
         "repo": "bradautomates/claude-video"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "dietrichgebert/ponytail"
+      }
     }
   },
   "effortLevel": "medium",
@@ -72,14 +79,14 @@
   "preferredNotifChannel": "iterm2",
   "autoCompactEnabled": true,
   "switchModelsOnFlag": true,
-  "autoScrollEnabled": false,
+  "autoScrollEnabled": true,
   "showTurnDuration": true,
+  "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
   "mcpServers": {
     "logfire": {
       "type": "http",
       "url": "https://logfire-us.pydantic.dev/mcp"
     }
-  },
-  "remoteControlAtStartup": true
+  }
 }
