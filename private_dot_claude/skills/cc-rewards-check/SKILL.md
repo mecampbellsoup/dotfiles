@@ -12,6 +12,8 @@ Matt has recurring statement credits scattered across 4 cards (Amex Platinum for
 
 The living doc `~/personal/credit-card-rewards-tracking.md` has the full research behind every claim below (per-card benefit tables, why each source is trusted or not, dated log entries). Read it once at the start of a run — it's the source of truth for *what benefits exist*; this skill's job is checking *current status*, not re-deriving the list.
 
+**This is not a backgroundable/scheduled skill as written — it needs Matt present.** Every step drives a live, authenticated Playwright browser against AwardWallet and Simplifi (and occasionally the issuer portals directly). That means real-time login handoffs when a session's expired, and — this happened during the skill's own dogfood run on 2026-07-20 — real browser-contention with whatever else Matt is doing in Playwright locally, since only one session can hold the shared browser profile at a time. An unattended run has no one to hand a login page to, no one to say "the browser's free now" after a collision, and no one to notice a hung session and recover it. Don't invoke this on a cron/schedule or any other unattended trigger until that's solved with something more robust (stored sessions, an isolated browser profile so it can't collide with Matt's manual use, real retry/backoff) — treat it as interactive-only for now.
+
 ## Why three tools, not one
 
 - **AwardWallet** (awardwallet.com) is the best source for real dollar status — it syncs balances directly from the issuers. But its sync can go stale silently (both the Amex and Chase connections were fully broken until Matt reset the stored passwords on 2026-07-20) and 3 specific Chase benefits never populate at all, resync or not.
