@@ -69,6 +69,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - Zero results → broaden, never narrow. Split compound words: "metrogroup" → try "metro" and "group"
 - Add `in:anywhere` when results seem incomplete (catches trash/spam)
 - Find all threads on a vendor topic before drafting — helpdesk replies come from subdomains, not `vendor.com`
+- **Sweeping a vendor/person for updates: search `from:<address> in:anywhere`, never just re-poll known thread IDs** — counterparties start NEW threads (new subject lines) and those never appear in a thread-ID poll. (Bit on 7/20/26: Armen proposed a meeting date in a fresh "Meeting" thread on Friday and nudged Monday; three thread-ID sweeps missed it while the doc claimed he was silent for 5 days.)
 - **Prior session found an email via thread ID?** Extract the thread ID from that session's JSONL first (`grep -o '"thread_id":"[^"]*"' ~/.claude/projects/.../session.jsonl` or look at prior Bash tool calls), then `gog gmail thread get <id>` directly. Keyword searches for retailer/vendor emails frequently return 0 results even when the email exists.
 
 ## iMessage (imsg)
