@@ -29,8 +29,13 @@ rg -n -i "awaiting|pending|no reply|nudged" ~/personal/*.md
 - Commit each change; keep CLAUDE.md active-docs rows and AGENTS.md in sync when descriptions change.
 - Digest for Matt, in this order: (1) answered/resolved items found, (2) still genuinely awaiting — with days-silent counts, (3) new Matt-owned actions the sweep surfaced.
 
+## 4. Before drafting off a sweep finding
+
+If a sweep finding turns into a reply/nudge draft (not just a doc patch), re-read the doc's own just-updated log entry for the correct thread/ticket/message ID before drafting — don't reuse a thread ID recalled from earlier in the same turn or from memory of the topic. Two incidents (7/20/26): a SharkNinja nudge was first drafted assuming a refund was still pending when the sweep itself had just found it processed, and a second draft replied on a stale ticket thread when the doc's own most recent log entry already named the correct, newer case thread. The sweep finds the truth; drafting must re-anchor to it, not to a thread ID already in context.
+
 ## Anti-patterns
 
 - Reporting "no reply yet" from doc state or a thread-ID poll without a fresh `from:` sweep — the exact failure this skill exists to prevent.
 - Sweeping all ~40 docs indiscriminately — only rows with a sweepable counterparty.
 - Updating the digest but not the docs — the doc patch is the deliverable; the digest is a byproduct.
+- Drafting a reply off a stale thread ID held in context instead of the doc's freshly-patched log entry — see step 4.
