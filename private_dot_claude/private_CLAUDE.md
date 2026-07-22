@@ -11,7 +11,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 
 **Email ops:** Always use `gog` for all email — both accounts. Never use Gmail MCP; `gog` handles everything and is authenticated to both accounts.
 
-**Calendar ops:** Same rule — use `gog calendar`, not the claude.ai Calendar MCP (its session expires constantly; failed twice before `gog` worked first try, 7/2/26). Create: `gog -a <acct> calendar create primary --summary "..." --from "2026-07-30T09:00:00-04:00" --to "..." --timezone "America/New_York" --description "..." --json`.
+**Calendar ops:** Same rule — use `gog calendar`, not the claude.ai Calendar MCP (its session expires constantly; failed twice before `gog` worked first try, 7/2/26). Create: `gog -a <acct> calendar create primary --summary "..." --from "2026-07-30T09:00:00-04:00" --to "..." --timezone "America/New_York" --description "..." --json`. Check for conflicts before confirming availability: `gog -a <acct> calendar conflicts --from <date> --to <date> --all --json` (queries every calendar within that account) — `-a` takes one account at a time, so run it once per account when checking "all accounts."
 
 **gog gotchas (recurring):**
 - There is no `gog gmail message get` — single message = `gog gmail get <id> --json` (or `gog gmail raw <id>` for lossless API JSON)
