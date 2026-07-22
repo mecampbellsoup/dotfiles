@@ -37,6 +37,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
   5. If a question is about a vendor's public pricing or documented scope, verify via web search before listing it as open
   6. Never assume two vendors/advisors are aware of each other or of a parallel engagement — confirm before referencing one in correspondence with another
   7. Match specificity to what the user actually knows — don't invent implementation details, and don't assert something is unaffected by a change without checking
+  8. If the draft confirms/accepts a specific date or time, check `gog calendar` across ALL accounts for that date first — a blanket "yes that works" is worse than surfacing a real conflict as a caveat (e.g. "works great except for an X call at Y"). Case: drafted "Thursday works great" to John Saunders 7/22/26 without checking; Matt's own edit revealed an 11am GC call.
 - **Pre-send gate (run before presenting or sending any draft):**
   1. CC list extracted from thread JSON — never assumed empty
   2. Required attachments (e.g. scope PDF) actually attached, not just referenced in text
@@ -59,6 +60,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 - Only include facts the user stated or directly evidenced in the thread — no inferred context
 - Never attribute a statement to a person unless confirmed
 - Plain, direct prose — no dramatic framing, no gushing
+- **No equivocation:** don't tack a softening qualifier onto a stated option/preference (e.g. "Could show you X — but really whatever sounds good to you"). State it plainly and leave room for the recipient to reply. Same idea applies to sign-offs — once logistics are actually settled, close warmly ("Looking forward to it") rather than re-opening the loop ("Let me know and I'll work around it") when there's nothing left to decide. Matt, 7/22/26: "don't equivocate so much. it doesn't help or add anything. just make statements, state preferences/asks, ask questions, and leave room for the recipient to reply. simple!"
 - Before sending: verify every question in the draft is one the recipient can actually answer — not rhetorical, not presupposing a framing they haven't seen
 - Match the audience: deferential + warm greeting for older/old-school vendors; casual for friends/family
 - Before asking a vendor/org a question, sweep email + texts for an answer they already gave
