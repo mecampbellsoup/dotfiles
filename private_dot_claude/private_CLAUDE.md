@@ -98,6 +98,10 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 
 If you see `missing required scopes`, check your GitHub CLI token scopes.
 
+**Sharing vault access (Business/Teams accounts, e.g. adding a family member to a shared vault):** the pattern is `op vault create <name>` → `op vault user grant --vault <name> --user <email> --permissions allow_viewing,allow_editing` → `op item move <item> --current-vault <src> --destination-vault <name>`. A brand-new vault is isolated by default (no auto-grant to a `Team Members`-style group) — verify with `op vault group list <name>` before granting individual users. If a grant 400s ("structure of request was invalid") for a specific user but the identical command works for another already-`ACTIVE` user, the cause is usually the target user still being `PENDING` (accepted the invite but hasn't been confirmed/completed setup) — check `op user get <email>` for `state`, not a syntax issue.
+
+**`op item move` prints full plaintext secret values in its JSON output, even without `--reveal`.** Unlike `item get`/`item list`, which conceal fields by default, a move dumps every field's actual value (passwords, security tokens) into stdout — a live secret-leak vector, same class as the "never pipe a secret's raw value into tool output" rule under § Workflow, just a different mechanism. Don't echo or summarize that output back to the user; treat the command's own stdout as sensitive and let it pass silently.
+
 ## gog Gmail Drafts
 
 Before drafting any reply, extract CC from JSON — plain text silently drops them:
