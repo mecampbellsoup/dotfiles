@@ -88,7 +88,9 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 
 ## 1Password CLI
 
-**`gh` commands:** Never use `op run --` with `gh` — it authenticates via macOS keychain independently and works without any wrapper.
+**`gh` commands:** `gh` authenticates via the macOS keychain independently, so `op run --` buys it nothing — don't add the wrapper to a bare `gh` call. But it isn't harmful either, and plenty of project skills/docs prescribe `op run -- gh`; following them is fine, not a violation of this rule.
+
+**When an `op run -- <cmd>` call errors, retry `<cmd>` without the prefix before diagnosing anything else.** `op run` failures surface as though they came from the wrapped command, so they get attributed to the wrong tool. The real case (2026-07-26): `op run -- gh` failed repeatedly with `dial tcp ...: connect: network is unreachable` while `curl https://api.github.com` returned 200, git-over-ssh worked, and plain `gh` succeeded instantly. A subagent read that as a genuine outage, correctly applied the 2-attempt escalation rule, and stopped — costing an agent stop on a PR that was ready to merge. The failure is transient (the same commands worked before and after; an 11-command sweep later passed clean, even with `op whoami` reporting no session), so the fix is retry-without-the-prefix, never "this tool is broken" or "the guidance prescribing it is wrong."
 
 **1Password Environments (MCP):** The `1password` MCP server is configured. Use `mcp__1password__*` tools for Environments (`.env` file management). Requires one Touch ID prompt per CC session via `mcp__1password__authenticate`.
 
