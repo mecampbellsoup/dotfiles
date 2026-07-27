@@ -179,6 +179,8 @@ python3 ~/.codex/skills/migrate-to-codex/scripts/migrate-to-codex.py \
 ```
 This syncs AGENTS.md, 3 MCP servers, and 5 subagents. Run after significant CLAUDE.md, subagent, or MCP changes.
 
+**Its `AGENTS.md` output lands on `~/.codex/AGENTS.md` — the global slot — carrying webapp content.** That is a layer violation, not just a file conflict: `~/.codex/AGENTS.md` holds the *global* mirror of `~/.claude/CLAUDE.md`, while the webapp's own project instructions belong at `webapp/AGENTS.md` (already synced separately). No flag skips the instructions stage, so re-copy the global mirror after every script run: `cp ~/.claude/CLAUDE.md ~/.codex/AGENTS.md`.
+
 **Omitting the flags runs all three stages including skills, which is the one stage you never want.** The skills stage writes *copies* of every `.claude/skills/*/SKILL.md` into `~/.agents/skills/` — and Codex loads that directory, so each copy then shadows the live skill under the same name while silently drifting from it, outliving deletions, and mangling frontmatter (it drops `user-invocable` and leaves a `## MANUAL MIGRATION REQUIRED` stub in the body). Fifteen such copies accumulated between March and July 2026 before being deleted; the bare command recreates all of them. Confirm with `--plan` before any run — a plan naming `stage: skills` means the flags were forgotten.
 
 Codex reaches the webapp's project skills through the repo's committed `.agents/skills/` symlinks instead — no copies, no drift. See `docs/AI_TOOLING.md` § Codex for how that bridge works and when to rebuild it. Plugin skills (`/tdd`, `/commit-changes`, etc.) ship via the marketplace and need nothing here.
