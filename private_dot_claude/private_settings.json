@@ -7,7 +7,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opusplan",
   "hooks": {
     "SessionEnd": [
       {
@@ -32,7 +31,8 @@
     "swarf-toolkit@swarf-skills": true,
     "watch@claude-video": true,
     "firecrawl@claude-plugins-official": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "scroll-world@scroll-world": false
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -69,6 +69,12 @@
         "source": "github",
         "repo": "dietrichgebert/ponytail"
       }
+    },
+    "scroll-world": {
+      "source": {
+        "source": "github",
+        "repo": "oso95/scroll-world"
+      }
     }
   },
   "effortLevel": "medium",
@@ -88,5 +94,9 @@
       "type": "http",
       "url": "https://logfire-us.pydantic.dev/mcp"
     }
+  },
+  "skillOverrides": {
+    "hermes-spend": "off",
+    "openclaw-spend": "off"
   }
 }
