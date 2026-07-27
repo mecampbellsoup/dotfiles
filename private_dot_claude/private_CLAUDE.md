@@ -172,10 +172,14 @@ Use initials `mc` for branches: `mc/323-fix-auth-flow`
 - `~/code/swarf/webapp/apps/chatbot/` — use `chore:` prefix (commitizen required)
 - Webapp worktrees (webapp-dev, webapp-dev-2, webapp-dev-3) — sync the chatbot subdir; picks up at merge
 
-**`~/code/swarf/webapp` AGENTS.md + skills:** Run the migrate script instead (handles "Claude Code" → Codex substitutions):
+**`~/code/swarf/webapp` AGENTS.md + subagents + MCP:** Run the migrate script instead of `cp` (handles "Claude Code" → Codex substitutions). **Always pass `--mcp --subagents`. Never run it bare:**
 ```bash
 python3 ~/.codex/skills/migrate-to-codex/scripts/migrate-to-codex.py \
-  --source ~/code/swarf/webapp --target ~/.codex
+  --source ~/code/swarf/webapp --target ~/.codex --mcp --subagents
 ```
-This syncs 11 project skills + AGENTS.md with Codex substitutions. Run after significant CLAUDE.md or skill changes. **Scope is `.claude/skills/` only** — the script globs `.claude/skills/*/SKILL.md` and does not touch `plugins/swarf-toolkit/skills/`. Edits to swarf-toolkit *plugin* skills (`/tdd`, `/commit-changes`, etc.) are distributed via the marketplace, not this script, so there's nothing to run for them.
+This syncs AGENTS.md, 3 MCP servers, and 5 subagents. Run after significant CLAUDE.md, subagent, or MCP changes.
+
+**Omitting the flags runs all three stages including skills, which is the one stage you never want.** The skills stage writes *copies* of every `.claude/skills/*/SKILL.md` into `~/.agents/skills/` — and Codex loads that directory, so each copy then shadows the live skill under the same name while silently drifting from it, outliving deletions, and mangling frontmatter (it drops `user-invocable` and leaves a `## MANUAL MIGRATION REQUIRED` stub in the body). Fifteen such copies accumulated between March and July 2026 before being deleted; the bare command recreates all of them. Confirm with `--plan` before any run — a plan naming `stage: skills` means the flags were forgotten.
+
+Codex reaches the webapp's project skills through the repo's committed `.agents/skills/` symlinks instead — no copies, no drift. See `docs/AI_TOOLING.md` § Codex for how that bridge works and when to rebuild it. Plugin skills (`/tdd`, `/commit-changes`, etc.) ship via the marketplace and need nothing here.
 
