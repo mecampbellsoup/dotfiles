@@ -138,6 +138,10 @@ Only use keyword grep if Stage 2 didn't find a match. When you do:
 - Grep for the keyword, then still extract first user messages to confirm topic
 - Combine `find -mmin` with `grep -l` to stay within the time window
 
+### Escalation — when to stop searching and ask
+
+Two rounds of broadened search with no confident hit → stop and ask the user for a disambiguating detail (a rough time, which app/window they were in, a distinctive phrase they remember) rather than continuing to broaden indefinitely. A "round" is a genuinely different search angle — a new keyword combination, a wider time window, a different project directory sweep — not a re-run of the same grep. This mirrors the same principle behind the user's gog email-search rule ("two rounds of broadened keyword search with no confident hit → ask the user to search their own Mail.app"): the topic likely used different wording than you're guessing, and the user already knows it. Asking costs one turn; a third or fourth broadened round rarely succeeds where the first two didn't (2026-07-30: five search rounds — keyword grep, combined-term grep, a full first-message scan across every session in a 48h window, a date-restricted grep, and a home-directory sweep — all failed before asking the user directly, which resolved instantly).
+
 ## Project Directories
 
 All conversation history is under `~/.claude/projects/`. Directory names encode the filesystem path with dashes replacing slashes. Scan all directories, not just webapp worktrees:
