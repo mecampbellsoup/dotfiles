@@ -130,6 +130,14 @@ First messages:
 
 Match the user's description against the first messages. The right conversation is usually obvious from the opening message.
 
+**Before Stage 3, check the retention floor.** Session transcripts are not retained indefinitely — get the earliest embedded timestamp across every candidate directory (first line matching `"timestamp":"` in each `.jsonl`, take the minimum) before spending multiple keyword-grep rounds:
+
+```bash
+grep -h -o '"timestamp":"[^"]*"' ~/.claude/projects/*/*.jsonl 2>/dev/null | sort | head -1
+```
+
+If the user's stated timeframe predates that floor, say so directly and stop — the transcript most likely no longer exists, and no amount of keyword broadening will find it. This check takes one command and should run as soon as the user gives a rough timeframe, before Stage 2 or Stage 3 burn rounds on a search that can't succeed. (2026-07-31: five rounds of GitHub-issue search, git log search, and keyword grep across every project directory — for a conversation the user placed "about 2 months ago" — all failed before checking the floor, which showed every directory's earliest transcript was exactly 30 days old. The floor check would have shortcut the whole search.)
+
 ### Stage 3: Keyword Grep (Fallback Only)
 
 Only use keyword grep if Stage 2 didn't find a match. When you do:
