@@ -4,7 +4,7 @@ name: personal
 root: ~/personal
 tmux_detached: false
 
-on_project_start: cd ~/code/finance && make sync
+on_project_start: cd ~/personal/finance && make sync
 
 windows:
   - personal:
@@ -12,7 +12,7 @@ windows:
       panes:
         - ''
   - finance:
-      root: ~/code/finance
+      root: ~/personal/finance
       layout: even-horizontal
       panes:
         - uv run python fasthtml_app.py

@@ -10,7 +10,7 @@ Maintain a persistent ledger of options/equity trades across Schwab accounts. Th
 
 **The code does the work — this skill routes intent to it.** Extraction, normalization, `activity_id` dedup, position-netting, reconciliation, and P&L are all implemented and tested in the repo (`normalizer.py`, `positions.py`, `reconcile.py`, `portfolio.py`, `unwind_quotes.py`). Don't reimplement them here. The architecture and ledger schema are documented in **`CLAUDE.md`** — read that, don't restate it.
 
-- **Working dir:** `~/code/finance` (NOT `~/finance` — that path doesn't exist)
+- **Working dir:** `~/personal/finance` (NOT `~/finance` and NOT `~/code/finance` — moved 2026-08-01)
 - **Run everything via** `uv run python …`
 
 ## Intent → command

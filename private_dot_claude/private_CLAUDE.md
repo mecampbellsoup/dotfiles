@@ -174,7 +174,7 @@ Use initials `mc` for branches: `mc/323-fix-auth-flow`
 
 **Repos needing direct-copy sync** (pattern: `cp CLAUDE.md AGENTS.md && git add AGENTS.md && git commit -m "sync AGENTS.md: ..."`):
 - `~/personal/`
-- `~/code/finance/`
+- `~/personal/finance/`
 - `~/code/swarf/business-vault/`
 - `~/code/swarf/webapp/apps/chatbot/` — use `chore:` prefix (commitizen required)
 - Webapp worktrees (webapp-dev, webapp-dev-2, webapp-dev-3) — sync the chatbot subdir; picks up at merge
