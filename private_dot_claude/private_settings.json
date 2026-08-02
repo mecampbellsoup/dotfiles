@@ -7,6 +7,11 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opusplan",
+  "skillOverrides": {
+    "hermes-spend": "off",
+    "openclaw-spend": "off"
+  },
   "hooks": {
     "SessionEnd": [
       {
@@ -94,9 +99,5 @@
       "type": "http",
       "url": "https://logfire-us.pydantic.dev/mcp"
     }
-  },
-  "skillOverrides": {
-    "hermes-spend": "off",
-    "openclaw-spend": "off"
   }
 }
