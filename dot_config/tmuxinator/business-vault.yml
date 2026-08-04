@@ -1,0 +1,10 @@
+# ~/.config/tmuxinator/business-vault.yml
+
+name: business-vault
+root: ~/code/swarf/business-vault
+tmux_detached: false
+
+windows:
+  - business-vault:
+      panes:
+        - op run -- git pull --all
