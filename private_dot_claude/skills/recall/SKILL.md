@@ -1,11 +1,11 @@
 ---
 name: recall
-description: Search across all communication channels — Slack, Gmail (both personal and work accounts), iMessage, LinkedIn DMs (logged-in browser), and the local Photos library (OCR of photographed documents) — to answer "what happened with X" questions. Use this skill whenever the user wants to find a past conversation, recall what was decided, check what someone said, dig up context from any medium, or locate a photo/scan of a document they took. Triggers on phrases like "what happened with", "what did we decide about", "did I talk to X about", "what was the deal with", "remind me about", "check my messages/emails/texts about", "find the photo/scan of", or any time the user references something they half-remember and wants to track down. Also use when another skill (like hermes-handoff) needs to resolve a natural-language reference to a past conversation.
+description: Search across all communication channels — Slack, Gmail (both personal and work accounts), iMessage, LinkedIn DMs (logged-in browser), Facebook (Messenger, group posts, Marketplace), and the local Photos library (OCR of photographed documents) — to answer "what happened with X" questions. Use this skill whenever the user wants to find a past conversation, recall what was decided, check what someone said, find something they posted or a listing they made, dig up context from any medium, or locate a photo/scan of a document they took. Triggers on phrases like "what happened with", "what did we decide about", "did I talk to X about", "what was the deal with", "remind me about", "check my messages/emails/texts about", "find the photo/scan of", "what did I post about", "find my old [Marketplace/group] listing", or any time the user references something they half-remember and wants to track down. This channel list is the personal-workspace default — when invoked in a different project context, also check that context's own channels (see Source routing). Also use when another skill (like hermes-handoff) needs to resolve a natural-language reference to a past conversation.
 ---
 
 # Recall
 
-Search across Slack, Gmail, and iMessage to surface what was said about a topic, synthesized into a single coherent answer.
+Search across Slack, Gmail, iMessage, LinkedIn, Facebook, and the Photos library to surface what was said about a topic, synthesized into a single coherent answer.
 
 ## Step 0: Check living docs first
 
@@ -35,6 +35,8 @@ grep -ril '<keyword>' ~/.claude/projects/ --include="*.jsonl" 2>/dev/null | grep
 
 ## Source routing
 
+**The channels in this skill (Slack, Gmail, iMessage, LinkedIn, Facebook, Photos) are the personal-workspace default — Matt's actual channels, hardcoded because that's what this skill was built against.** If this skill is ever invoked from a different context (a Swarf repo, another project with its own communication surface), don't assume this list is exhaustive: check that context's own docs/skills first — its `CLAUDE.md`, `docs/SKILL_INVENTORY.md`, or sibling skills — for channels specific to it (GitHub issues, Sentry, a project Slack channel not covered by the generic Slack search above, etc.) and route to those the same way you'd route to any channel below. The *procedure* here (check living docs → check prior sessions → route by signal → fan out → synthesize into one narrative) is what's portable; the specific channel list is not.
+
 Read the query for medium signals before searching. Route accordingly:
 
 - **"text", "texted", "iMessage", "imsg", person's name with personal context** → iMessage first; fan out to others if thin
@@ -43,7 +45,8 @@ Read the query for medium signals before searching. Route accordingly:
 - **"photo", "picture", "scan", "screenshot", "I took a photo of", a sought-after letter/form/document** → Photos library (see below); also fan out to text channels
 - **"our past convo", "we talked about", "last session", "you found", anything Claude itself previously did** → past CC session transcripts first (Step 0.5) — the prior session likely holds the synthesized answer
 - **Founder/professional outreach, networking, investor contact, "reached out to", cold contact with a stranger** → also check LinkedIn DMs (see below); Matt's outreach to founders/professionals frequently includes LinkedIn messages invisible to every CLI channel
-- **No clear signal** → fan out to all three message channels in parallel
+- **"Facebook", "Messenger", "BNFG", "Buy Nothing", "the group", "posted", "listing", "Marketplace"** → Facebook first (see below); a post/listing Matt made or a buyer/DM exchange lives only there, invisible to every other channel
+- **No clear signal** → fan out to all message channels in parallel
 
 When in doubt, fan out. The cost of one extra empty search is lower than missing the answer.
 
@@ -90,6 +93,14 @@ No CLI/API access — use the Playwright logged-in browser session (Matt authent
 
 - Search: navigate to `linkedin.com/messaging/?searchTerm=<name>` — the conversation list filters to matches
 - Read a thread: click the conversation, extract via `browser_evaluate` over `.msg-s-event-listitem` nodes (snapshot right after navigate returns an empty tree — use evaluate with a ~3s delay instead)
+
+### Facebook (Messenger, group posts, Marketplace)
+
+Use for BNFG (Buy Nothing Fort Greene) giveaways, other Facebook group posts, Marketplace listings, and Messenger DMs tied to any of those — none of it is reachable from any other channel. Full extraction patterns and gotchas in memory: `reference-facebook-messenger-automation.md`.
+
+- **Find a past post by Matt in a group:** navigate to `facebook.com/groups/<groupId>/my_posted_content/` (the group's own "Your content" → Published tab) and scroll/regex-search the page text — **don't** guess a `facebook.com/search/posts/?filters=...` URL, Graph Search's filter param is opaque and 400s on a guess
+- **Marketplace listings:** `facebook.com/marketplace/you/selling`; a listing's buyer conversation lives in the Marketplace inbox (`facebook.com/marketplace/inbox/`), not the regular Messenger sidebar
+- **Messenger DMs:** E2EE message requests need accepting before the thread renders; see the memory file for selectors and the full-history-extraction recipe (Messenger's inbox pane doesn't paginate — open `facebook.com/messages/t/<threadId>` directly)
 
 ### iMessage
 
