@@ -70,7 +70,8 @@ One tight paragraph. Newest first.
 1. Write the file from the template above
 2. Add a row to the **Active living docs** table in `~/personal/CLAUDE.md`
 3. Replace the memory body with: `See ~/personal/<topic>.md` (keep frontmatter intact)
-4. Commit: stage CLAUDE.md + all new topic files together — batch commits are fine when creating multiple docs in one triage pass
+4. If `~/personal/` is in the Codex Sync direct-copy list (see `~/.claude/CLAUDE.md` § Codex Sync), also `cp CLAUDE.md AGENTS.md` — CLAUDE.md just changed, and that section makes AGENTS.md's staleness someone else's problem to notice unless it's kept in lockstep here
+5. Commit: stage CLAUDE.md + AGENTS.md + all new topic files together — batch commits are fine when creating multiple docs in one triage pass
 
 ## Update
 
@@ -91,9 +92,10 @@ When a topic fully resolves:
 
 1. Prepend `## CLOSED YYYY-MM-DD — <outcome>` above **Now**
 2. Remove the row from the Active living docs table in `~/personal/CLAUDE.md`
-3. Move the file to `~/Documents/<domain>/` per File Lifecycle rules in CLAUDE.md
-4. Drop the memory entry
-5. Commit
+3. Sync AGENTS.md the same way as Create step 4, if applicable — CLAUDE.md changed here too
+4. Move the file to `~/Documents/<domain>/` per File Lifecycle rules in CLAUDE.md
+5. Drop the memory entry
+6. Commit
 
 ## Anti-patterns
 
