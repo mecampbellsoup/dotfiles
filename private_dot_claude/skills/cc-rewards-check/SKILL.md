@@ -60,6 +60,8 @@ When a benefit is confirmed as "In progress" or "unused" in Steps 2–3 but Matt
 
 Benefits that require manual action each cycle (enroll-and-redeem, not auto-apply — e.g. CLEAR+, Equinox, Oura Ring) don't belong in this table; they're just tracked as plain balances in Steps 2–3.
 
+**Some benefits deposit into a merchant account balance, not a statement credit — Simplifi structurally can't see these.** The Amex Platinum Uber Cash ($200/yr) is the known example: it loads directly into Matt's Uber app balance for ride/Eats use once the card is linked to the Uber account, and never posts as a card transaction anywhere. Matt already uses this balance as it lands — don't chase it through Simplifi search, don't flag it as "unmapped" in the digest, and don't treat "no Simplifi hits" as a problem the way it would be for a real statement credit. If a new benefit turns out to work the same way, confirm on the issuer's own benefit description page (Amex's says "Receive up to $X annually when you add your Card to your [Merchant] account" — that phrasing is the tell) and note it here as a second example rather than re-investigating it as a gap next time.
+
 **Issuer portal sessions (Amex, Chase) log out fast.** If Step 2, Step 3, or this step needs a direct issuer-portal check (not just AwardWallet/Simplifi), expect to hand off to Matt for re-login more than once in a single run — don't treat a repeat login prompt as something broken, just ask again.
 
 ## Step 5 — Compile the digest
