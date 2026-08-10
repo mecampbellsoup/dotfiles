@@ -8,6 +8,8 @@ user_invocable: true
 
 Matt has recurring statement credits scattered across 4 cards (Amex Platinum for Schwab, Amex Gold, Chase Sapphire Reserve, Delta SkyMiles Reserve), each on its own cadence (monthly/quarterly/semi-annual/annual). No single tool tracks all of them reliably — the point of this skill is to know which tool to trust for which piece of data, so Matt doesn't have to check three places and cross-reference himself every time.
 
+The annual fees on these cards are high enough that fully leveraging every benefit matters, not just avoiding expirations. A number of benefits auto-apply from recurring spend (streaming subscriptions, memberships) rather than requiring Matt to remember to redeem them — see Step 4 and the living doc's `## Auto-Trigger Mapping` table, which tracks which known merchant charges drive which benefit so a lapsed subscription or a card mix-up gets caught instead of silently forfeiting a credit every cycle.
+
 **Bilt Mastercard has no dollar credits** (pure points-multiplier card, confirmed 2026-07-20) — skip it entirely. Apple Card, Wells Fargo Cash Wise Visa, and Home Depot Credit Card are simple cash-back cards with nothing to reconcile — also out of scope.
 
 The living doc `~/personal/credit-card-rewards-tracking.md` has the full research behind every claim below (per-card benefit tables, why each source is trusted or not, dated log entries). Read it once at the start of a run — it's the source of truth for *what benefits exist*; this skill's job is checking *current status*, not re-deriving the list.
@@ -44,7 +46,23 @@ For these, check `https://app.simplifimoney.com` instead (1Password item "Simpli
 
 If Simplifi doesn't resolve a benefit either (e.g. the credit hasn't posted at all yet, or the payee naming doesn't match what you expect), it's fine to report it as "status unknown, check the Chase portal directly" rather than guessing — a wrong number is worse than an honest gap.
 
-## Step 4 — Compile the digest
+## Step 4 — Cross-check auto-applying credits against known recurring charges
+
+Some benefits don't require Matt to remember to redeem anything — they auto-apply whenever a matching merchant charge posts (e.g. the Amex Platinum Digital Entertainment Credit auto-fires off his Disney+ subscription). The point of this step is to confirm those recurring charges are actually landing on the *right card* and actually covering the *full* credit each cycle — not just to re-confirm the dollar status already read in Steps 2–3.
+
+The living doc's `## Auto-Trigger Mapping` table is the accumulated record of which merchant charges are confirmed to drive which benefit. For each mapped benefit:
+
+1. Search Simplifi for the known merchant/payee name (e.g. "Disney", "New York Times", "Walmart+") — search by that keyword alone, not the card, since Simplifi search spans all accounts and results show which card each hit landed on.
+2. Confirm the charge is still landing on the card the benefit requires, still recurring on roughly the expected cadence, and still large enough to fully use the credit (a lapsed subscription or a card swap silently breaks the auto-capture).
+3. If a mapped charge is missing, moved to the wrong card, or has dropped in amount, flag it in the digest — this is exactly the kind of leak Matt is trying to catch, more valuable than a routine "still on track" note.
+
+When a benefit is confirmed as "In progress" or "unused" in Steps 2–3 but Matt mentions (or you suspect) it should be auto-applying, treat that as a prompt to go find and add the mapping rather than letting it stay a mystery — search Simplifi for likely merchant names (streaming services, subscriptions, delivery apps) on the relevant card, confirm the match against the issuer's own published partner list for that benefit (WebSearch + WebFetch the primary source — don't trust a search summary for the partner list, confirm on the issuer's own terms page), and add a new row to the Auto-Trigger Mapping table via `/personal-doc` so future runs check it automatically.
+
+Benefits that require manual action each cycle (enroll-and-redeem, not auto-apply — e.g. CLEAR+, Equinox, Oura Ring) don't belong in this table; they're just tracked as plain balances in Steps 2–3.
+
+**Issuer portal sessions (Amex, Chase) log out fast.** If Step 2, Step 3, or this step needs a direct issuer-portal check (not just AwardWallet/Simplifi), expect to hand off to Matt for re-login more than once in a single run — don't treat a repeat login prompt as something broken, just ask again.
+
+## Step 5 — Compile the digest
 
 One digest, sorted by urgency:
 
@@ -54,10 +72,10 @@ One digest, sorted by urgency:
 
 Skip anything already fully claimed for its current period — the digest is for what's actionable, not a full status dump of every benefit.
 
-## Step 5 — Update the living doc
+## Step 6 — Update the living doc
 
-Use the `/personal-doc` skill to patch `~/personal/credit-card-rewards-tracking.md`'s `Now` table and `Log` section with this run's findings — don't `Edit` the doc directly (per `feedback_personal-doc-skill-invocation.md`, this keeps the living-doc conventions consistent). Include any new benefits discovered in Step 2 and any stale-connection flags from Step 1, since those are exactly the kind of thing that should persist across sessions instead of being rediscovered each time.
+Use the `/personal-doc` skill to patch `~/personal/credit-card-rewards-tracking.md`'s `Now` table and `Log` section with this run's findings — don't `Edit` the doc directly (per `feedback_personal-doc-skill-invocation.md`, this keeps the living-doc conventions consistent). Include any new benefits discovered in Step 2, any stale-connection flags from Step 1, and any new/broken Auto-Trigger Mapping rows from Step 4 — these are exactly the kind of thing that should persist across sessions instead of being rediscovered each time.
 
-## Step 6 — Present the digest
+## Step 7 — Present the digest
 
 Give Matt the digest directly in the conversation — that's the actual deliverable, the living-doc update in Step 5 is bookkeeping, not the answer to what he asked.
