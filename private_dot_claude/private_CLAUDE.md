@@ -185,6 +185,8 @@ Use initials `mc` for branches: `mc/323-fix-auth-flow`
 - `~/code/swarf/webapp/apps/chatbot/` — use `chore:` prefix (commitizen required)
 - Webapp worktrees (webapp-dev, webapp-dev-2, webapp-dev-3) — sync the chatbot subdir; picks up at merge
 
+**The copy is a point-in-time snapshot, so it has to be the LAST thing before the commit — re-run it after any rebase that touched the source, and confirm with `diff` rather than assuming.** A `cp` taken earlier and committed later doesn't just go stale: `AGENTS.md` then carries pre-rebase text for lines the rebase changed in `CLAUDE.md`, so committing it silently *reverts* incoming content. This is the snapshot-is-not-a-merge rule under § Workflow arriving through a different mechanism than `git stash` — same failure, no stash involved, and nothing warns. Near-miss 8/14/26 (`apps/chatbot`, PR #1464): a mirror copied before a rebase would have reverted a sibling PR's just-landed wording; caught only by re-running `diff CLAUDE.md AGENTS.md` afterward, which is the cheap check that makes this visible.
+
 **`~/code/swarf/webapp` AGENTS.md + subagents + MCP:** Run the migrate script instead of `cp` (handles "Claude Code" → Codex substitutions). **Always pass `--mcp --subagents`. Never run it bare:**
 ```bash
 python3 ~/.codex/skills/migrate-to-codex/scripts/migrate-to-codex.py \
