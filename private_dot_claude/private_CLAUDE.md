@@ -73,6 +73,7 @@ Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, 
 
 **Search strategy:**
 - Search literal words first; simplest query before compound ("andrew", not "andrew socceria")
+- **An identifier you already hold beats any wording you are guessing — search it first, every time.** If a prior step handed you an email address, a record/conversation ID, an order number, or a URL fragment, that string is in the target message verbatim; invented phrasings ("thumbs up", "feedback received") are a theory about how someone worded it. Applies to Slack, gog, and imsg alike. Corollary: if you also hold an exact timestamp, read that channel/window directly instead of searching at all. (Bit 2026-08-16: four guessed Slack queries returned zero and ended in asking Matt for a permalink, while `saudermachine` and the conversation ID `32377` — both already pulled from the prod DB minutes earlier — each found it on the first try.)
 - Zero results → broaden, never narrow. Split compound words: "metrogroup" → try "metro" and "group"
 - Add `in:anywhere` when results seem incomplete (catches trash/spam)
 - Find all threads on a vendor topic before drafting — helpdesk replies come from subdomains, not `vendor.com`
@@ -156,6 +157,7 @@ gog -a <account> gmail draft create \
 - Before designing anything new, name the existing mechanism closest to what you need — extend it if possible, build something new only if it genuinely can't stretch.
 - Propose changes before implementing — wait for approval
 - When a directive is ambiguous, stop and ask rather than guessing — especially for irreversible actions like sending messages or submitting forms
+- **A skill/command name that also reads as plain English pulls toward the technical reading even when the plain one is what's meant — check the plain reading first for a state/next-action question.** "What's /next-up" asked after invoking a `/next-up`-named skill reads as "explain that skill" when it's actually "what should we do next" — the recent technical usage anchors the parse. The discriminating test: is this a request to explain a mechanism, or a forward-looking question about state/action? The second gets the plain-English reading by default. Same mechanism `pickup-issue/SKILL.md` already documents narrowly for its own trigger phrase ("pick up #N" reads as this skill's invocation even when the sentence is about a different session) — this is that pattern recurring in a second skill, so treat it as general rather than fixing it once per skill name.
 - On command failures, check in with me before retrying
 - After 2 failed attempts at the same approach, STOP — tell me what you tried, what failed, and what you'd try next
 - When a search/lookup returns nothing, broaden it before changing approach — and verify each step incrementally on multi-step operations
