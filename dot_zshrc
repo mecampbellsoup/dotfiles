@@ -164,8 +164,6 @@ export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 # 1password
 source $HOME/.config/op/plugins.sh
 
-# 1Password service account (matt-mac) — passwordless op auth, no Touch ID per-call
-[ -f ~/.op_service_account_token ] && source ~/.op_service_account_token
 
 # uv
 eval "$(uv generate-shell-completion zsh)"
