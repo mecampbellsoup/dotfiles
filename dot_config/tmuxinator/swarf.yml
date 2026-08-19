@@ -90,8 +90,16 @@ windows:
   # deploy-check for 41 hours. Scrub the environment; do not "simplify" this to
   # a bare ./run.sh.
   #
-  # Not exec'd on purpose: if a runner exits, the pane drops to a prompt instead
-  # of the window vanishing, so it's visible and restartable.
+  # If a runner exits (Ctrl-C, crash, network drop), tmux closes the pane and
+  # the window disappears — `remain-on-exit` is off, and dropping `exec` does
+  # not change that, since tmux runs the command as the pane's process either
+  # way. So a missing runner-N window means that listener is DOWN, not idle.
+  # Recreate it with:
+  #   tmux new-window -d -t swarf -n runner-2 "cd ~/actions-runner-2 && env -i \
+  #     HOME=$HOME USER=$USER LANG=en_US.UTF-8 TMPDIR=/tmp \
+  #     PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh"
+  # Confirm with `gh api repos/Swarf-Inc/webapp/actions/runners` — GitHub lags
+  # local process state by a few seconds in both directions.
   - runner-1:
       root: ~/actions-runner
       panes:
