@@ -69,3 +69,26 @@ windows:
       root: ~/code/swarf/webapp-dev-6
       panes:
         - op run -- git pull --all
+  # The two self-hosted GitHub Actions runners (mac-native-arm64, -2), which
+  # carry every CI, release, and deploy job. They live here rather than under
+  # launchd because launchd's SessionCreate detaches them from the login
+  # keychain, which breaks `docker login ghcr.io` on every image job
+  # (Swarf-Inc/webapp#1753). A tmux pane in the login session keeps that access.
+  #
+  # `env -i` is load-bearing, not tidiness: .envrc runs `dotenv`, so a shell in
+  # any worktree exports that worktree's whole .env. A listener started from one
+  # hands every containerized job those values, and Compose resolves ${VAR} from
+  # the environment before any .env file — MINIO_PORT alone silently broke
+  # deploy-check for 41 hours. Scrub the environment; do not "simplify" this to
+  # a bare ./run.sh.
+  #
+  # Not exec'd on purpose: if a runner exits, the pane drops to a prompt instead
+  # of the window vanishing, so it's visible and restartable.
+  - runner-1:
+      root: ~/actions-runner
+      panes:
+        - env -i HOME="$HOME" USER="$USER" LANG=en_US.UTF-8 TMPDIR=/tmp PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh
+  - runner-2:
+      root: ~/actions-runner-2
+      panes:
+        - env -i HOME="$HOME" USER="$USER" LANG=en_US.UTF-8 TMPDIR=/tmp PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh
