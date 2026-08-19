@@ -1,6 +1,6 @@
 ---
 name: review-documentation
-description: Review the documentation web for any project — CLAUDE.md, memory files, living docs, skills, or docs/ — checking for redundancy, gaps, coherence, and cross-references. Invoke proactively before adding new docs or after editing CLAUDE.md or memory files. Invoke reactively when the user asks "is this documented?", "should we document X?", or "review the docs". For Swarf repos (has .claude/skills/), defer to swarf-toolkit:review-documentation which adds doc-drift-detector, skill chaining audit, and deeper tooling.
+description: Review the documentation web for any project — CLAUDE.md, memory files, living docs, skills, or docs/ — checking for redundancy, gaps, coherence, and cross-references. Invoke proactively before adding new docs or after editing CLAUDE.md or memory files. Invoke reactively when the user asks "is this documented?", "should we document X?", or "review the docs". For Swarf repos (has .claude/skills/), defer to that repo's own project /review-documentation, which adds doc-drift-detector, skill chaining audit, and deeper tooling.
 user_invocable: true
 ---
 
@@ -18,7 +18,7 @@ ls ~/personal/*.md 2>/dev/null                    # personal workspace
 ls docs/ CLAUDE.md README.md 2>/dev/null          # generic project
 ```
 
-**If this is a Swarf repo** (`.claude/skills/` exists): stop and invoke `swarf-toolkit:review-documentation` instead — it adds doc-drift-detector, skill-chaining audit, and drift detection that this skill doesn't replicate.
+**If this is a Swarf repo** (`.claude/skills/review-documentation/` exists): stop and read that project skill instead — it adds doc-drift-detector, skill-chaining audit, and drift detection that this skill doesn't replicate. It shadows this one by name, so reach it by path rather than by invoking `/review-documentation` again.
 
 **Personal workspace** (`~/personal/`): the web is CLAUDE.md + `~/.claude/CLAUDE.md` + memory files + living docs (`~/personal/*.md`).
 
