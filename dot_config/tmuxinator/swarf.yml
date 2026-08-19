@@ -69,6 +69,14 @@ windows:
       root: ~/code/swarf/webapp-dev-6
       panes:
         - op run -- git pull --all
+  - webapp-7:
+      root: ~/code/swarf/webapp-dev-7
+      panes:
+        - op run -- git pull --all
+  - webapp-8:
+      root: ~/code/swarf/webapp-dev-8
+      panes:
+        - op run -- git pull --all
   # The two self-hosted GitHub Actions runners (mac-native-arm64, -2), which
   # carry every CI, release, and deploy job. They live here rather than under
   # launchd because launchd's SessionCreate detaches them from the login
