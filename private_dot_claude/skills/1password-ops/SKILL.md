@@ -1,6 +1,6 @@
 ---
 name: 1password-ops
-description: 'Matt''s 1Password CLI and credential-handling rules — op run vs bare gh, Touch ID behavior in Claude Code, the 1Password Environments MCP, live web-session logins via the persistent Playwright profile (and when to hand off authentication rather than materialize credentials), sharing vault access with family, and the fact that `op item move` prints plaintext secrets. Load before any `op` command, before logging into a site on Matt''s behalf, before granting vault access, and whenever a task needs a credential, token, API key, or password. Triggers: 1password, op run, op item, vault, credential, secret, API key, token, log me in, sign in to.'
+description: 'Matt''s 1Password CLI and credential-handling rules — op run vs bare gh, Touch ID behavior in Claude Code, the 1Password Environments MCP, live web-session logins via the persistent Playwright profile (and when to hand off authentication rather than materialize credentials), sharing vault access with family, the fact that `op item move` prints plaintext secrets, and the strip-then-move recipe for SSO ("sign in with") items that `op item move`/`delete` refuse. Load before any `op` command, before logging into a site on Matt''s behalf, before granting vault access, and whenever a task needs a credential, token, API key, or password. Triggers: 1password, op run, op item, vault, credential, secret, API key, token, log me in, sign in to.'
 ---
 
 ## 1Password CLI
@@ -19,5 +19,26 @@ If you see `missing required scopes`, check your GitHub CLI token scopes.
 
 **Sharing vault access (Business/Teams accounts, e.g. adding a family member to a shared vault):** the pattern is `op vault create <name>` → `op vault user grant --vault <name> --user <email> --permissions allow_viewing,allow_editing` → `op item move <item> --current-vault <src> --destination-vault <name>`. A brand-new vault is isolated by default (no auto-grant to a `Team Members`-style group) — verify with `op vault group list <name>` before granting individual users. If a grant 400s ("structure of request was invalid") for a specific user but the identical command works for another already-`ACTIVE` user, the cause is usually the target user still being `PENDING` (accepted the invite but hasn't been confirmed/completed setup) — check `op user get <email>` for `state`, not a syntax issue.
 
-**`op item move` prints full plaintext secret values in its JSON output, even without `--reveal`.** Unlike `item get`/`item list`, which conceal fields by default, a move dumps every field's actual value (passwords, security tokens) into stdout — a live secret-leak vector, same class as the "never pipe a secret's raw value into tool output" rule under § Workflow, just a different mechanism. Don't echo or summarize that output back to the user; treat the command's own stdout as sensitive and let it pass silently.
+**`op item move` prints full plaintext secret values in its JSON output, even without `--reveal`.** Unlike `item get`/`item list`, which conceal fields by default, a move dumps every field's actual value (passwords, security tokens) into stdout — a live secret-leak vector, same class as the "never pipe a secret's raw value into tool output" rule under § Workflow, just a different mechanism. Don't echo or summarize that output back to the user; treat the command's own stdout as sensitive and let it pass silently. Redirect it (`>/dev/null`) rather than relying on discipline.
+
+**Two other places a value hides when dumping an item's structure:** `password_details.history` carries previous plaintext passwords, and `--reveal` puts every concealed value in the JSON. A field-by-field dump that masks only `value` still leaks the history array — mask `password_details` too, or print lengths (`len=%d`) instead of values.
+
+**An SSO item ("sign in with Google/GitHub/Apple") blocks `op item move` AND `op item delete` — strip the field first.** Both fail with `validateVaultItem failed to Validate: ... has unsupported field type: ssoLogin`, exit 8, nothing written. That reads as "the CLI can't handle this item, use the app," and it isn't: the validator objects to one field, not the item. The CLI surfaces that field as type `UNKNOWN` with an empty value, so filtering on the type is exact.
+
+```sh
+op item get <id> --vault <src> --format=json --reveal \
+  | python3 -c "import json,sys; d=json.load(sys.stdin); \
+      d['fields']=[f for f in d['fields'] if f.get('type')!='UNKNOWN' and (f.get('id') or f.get('label'))]; \
+      d['sections']=[s for s in d.get('sections',[]) \
+                     if any(f.get('section',{}).get('id')==s.get('id') for f in d['fields'])]; \
+      json.dump(d,sys.stdout)" \
+  | op item edit <id> --vault <src> >/dev/null
+op item move <id> --current-vault <src> --destination-vault <dst> >/dev/null
+```
+
+`--reveal` is mandatory — without it concealed values come back empty and the edit blanks them — but the value never leaves the pipe, so nothing reaches a transcript. The `(f.get('id') or f.get('label'))` half is a second, unrelated block: `op item edit` rejects any field with neither, failing with `a field to edit must have either an ID or a Label`. Real instance — a stray 1-character field referenced as `op://Matt/Uber/`, addressable by nothing.
+
+**Stripping the SSO field costs nothing when the item is already moving vaults, and everything otherwise.** 1Password links only work within one vault, and a move removes links to or from the moved item ([docs](https://support.1password.com/link-items/)) — so post-move the field is a dead pointer either way. On an item staying put, that field is live and dropping it destroys a working link. Re-linking is app-only: the CLI can't write the type at all.
+
+**Moving an item changes its ID** (`rw273yhd…` → `i27ihqb2…`) — it is a create-and-delete, not a relocation. Any stored reference to the old ID breaks, which is the mechanism behind vault-move link breakage. Attachments and TOTP fields *do* survive a move, contrary to community reports; verified with a throwaway probe item, 2026-08-20.
 
