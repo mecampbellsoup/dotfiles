@@ -12,6 +12,14 @@ These load on demand instead of every session. Invoke the skill before doing the
 | `1password-ops` | `op` CLI, credentials, vault sharing, live web logins |
 | `codex-sync` | Mirroring CLAUDE.md → AGENTS.md, the migrate-to-codex script |
 
+## Outbound communications — always-on gates
+
+These stay here rather than in `email-ops` because they gate irreversible actions taken under Matt's name, and a rule that only loads when a skill loads can't stop a mistake you don't know you're making. Mechanics (gog flags, JSON shapes, drafting standards) are in `email-ops`; these three are the gates.
+
+- **Never send a composed communication without explicit approval ("send it").** Draft → show → wait; expect 1–3 revision rounds. Scoped to things you wrote on Matt's behalf that go out under his name — email, iMessage, forwards, texts. Past-tense or ambiguous mentions ("sent it") are not a send command. It is NOT a general rule for every irreversible action: a form Matt asked you to complete is governed by the ambiguity test in § Workflow, and "just do the whole thing" resolves that — keep moving and report after.
+- **Extract the CC list from the thread JSON before creating any reply draft — never assume it's empty, never invent recipients.** Reply-all by default: everyone already on the thread, plus anyone else who is a relevant party. If unsure whether someone belongs, verify rather than omit.
+- **Never guess an email address format** (e.g. `firstname.lastname@domain.com`). Confirm by domain search first (`from:domain.com in:anywhere`) — name-keyword searches miss people whose address uses initials. For a new external contact with no history, verify against the organization's own site; treat contact-lookup aggregators as leads, never as the address to send to.
+
 ## Workflow
 
 - **Never use a real send/write/create call to "test" that a command or flag is valid.** Verify syntax via `--help`, a dry-run flag, or reading tool docs instead — a probe call on a send-type tool (`imsg send`, `gog draft send`, calendar create, etc.) is a real, irreversible side effect, not a no-op, regardless of the placeholder text used. Case: sent a real iMessage to Dad reading "PREVIEW-ONLY-NOT-SENT" while trying to confirm the `imsg send` command existed, directly violating the never-send-without-"send it" rule.
