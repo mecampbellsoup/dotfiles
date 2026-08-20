@@ -77,34 +77,25 @@ windows:
       root: ~/code/swarf/webapp-dev-8
       panes:
         - op run -- git pull --all
-  # The two self-hosted GitHub Actions runners (mac-native-arm64, -2), which
-  # carry every CI, release, and deploy job. They live here rather than under
-  # launchd because launchd's SessionCreate detaches them from the login
-  # keychain, which breaks `docker login ghcr.io` on every image job
-  # (Swarf-Inc/webapp#1753). A tmux pane in the login session keeps that access.
+  # The macOS self-hosted runners (mac-native-arm64, -2) used to live here as
+  # windows 10-11. Since 2026-08-19 CI, releases and deploys land on the
+  # Hostinger Linux host instead (docs/CI.md), so the pair takes no work and
+  # no longer starts with the session. They stay registered under `workstation`
+  # as the rollback: flipping CI_RUNNER_OVERRIDE / DEPLOY_RUNNER_OVERRIDE back
+  # is the whole procedure, plus starting the listeners again:
   #
-  # `env -i` is load-bearing, not tidiness: .envrc runs `dotenv`, so a shell in
-  # any worktree exports that worktree's whole .env. A listener started from one
-  # hands every containerized job those values, and Compose resolves ${VAR} from
-  # the environment before any .env file — MINIO_PORT alone silently broke
-  # deploy-check for 41 hours. Scrub the environment; do not "simplify" this to
-  # a bare ./run.sh.
-  #
-  # If a runner exits (Ctrl-C, crash, network drop), tmux closes the pane and
-  # the window disappears — `remain-on-exit` is off, and dropping `exec` does
-  # not change that, since tmux runs the command as the pane's process either
-  # way. So a missing runner-N window means that listener is DOWN, not idle.
-  # Recreate it with:
   #   tmux new-window -d -t swarf -n runner-2 "cd ~/actions-runner-2 && env -i \
   #     HOME=$HOME USER=$USER LANG=en_US.UTF-8 TMPDIR=/tmp \
   #     PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh"
-  # Confirm with `gh api repos/Swarf-Inc/webapp/actions/runners` — GitHub lags
-  # local process state by a few seconds in both directions.
-  - runner-1:
-      root: ~/actions-runner
-      panes:
-        - env -i HOME="$HOME" USER="$USER" LANG=en_US.UTF-8 TMPDIR=/tmp PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh
-  - runner-2:
-      root: ~/actions-runner-2
-      panes:
-        - env -i HOME="$HOME" USER="$USER" LANG=en_US.UTF-8 TMPDIR=/tmp PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin ./run.sh
+  #
+  # Two constraints survive the move and must not be "simplified" on the way
+  # back. They belong to a tmux pane in the login session, not to launchd:
+  # launchd's SessionCreate detaches a listener from the login keychain, which
+  # breaks `docker login ghcr.io` on every image job (Swarf-Inc/webapp#1753).
+  # And `env -i` is load-bearing — .envrc runs `dotenv`, so a shell in any
+  # worktree exports that worktree's whole .env; Compose resolves ${VAR} from
+  # the environment before any .env file, and MINIO_PORT alone silently broke
+  # deploy-check for 41 hours.
+  #
+  # Confirm listener state with `gh api repos/Swarf-Inc/webapp/actions/runners`
+  # — GitHub lags local process state by a few seconds in both directions.
