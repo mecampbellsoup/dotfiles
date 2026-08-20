@@ -1,6 +1,6 @@
 ---
 name: email-ops
-description: Matt's email, Gmail, and iMessage operating rules — which account to use, the gog CLI and its many gotchas (JSON shapes, attachments, forwarding, drafts, --quote/CID failures, token expiry), draft-writing standards, the pre-draft and pre-send gates, recipient-address verification, reply-all policy, and search strategy. Load BEFORE composing, searching, sending, or forwarding any email or text message, before answering "did X get my email / what did they say", and before any gog or imsg command. Triggers: email, gmail, gog, inbox, draft, reply, forward, send it, CC, attachment, iMessage, imsg, text her/him, message someone, search my mail.
+description: 'Matt''s email, Gmail, and iMessage operating rules — which account to use, the gog CLI and its many gotchas (JSON shapes, attachments, forwarding, drafts, --quote/CID failures, token expiry), draft-writing standards, the pre-draft and pre-send gates, recipient-address verification, reply-all policy, and search strategy. Load BEFORE composing, searching, sending, or forwarding any email or text message, before answering "did X get my email / what did they say", and before any gog or imsg command. Triggers: email, gmail, gog, inbox, draft, reply, forward, send it, CC, attachment, iMessage, imsg, text her/him, message someone, search my mail.'
 ---
 
 ## Email Accounts
