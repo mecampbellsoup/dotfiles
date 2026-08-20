@@ -46,4 +46,6 @@ A gap has to be real and recurring to warrant changing anything. Zero candidates
 
 Analyze deeply; change conservatively. Under-analyzing and over-acting are different failures, and the second is the one that feels productive.
 
+Before a candidate becomes a row, try to kill it: **would this have changed today's outcome, and has it occurred outside this session?** Two noes means it doesn't get a row. A row that dies under the first question you're asked was never a verdict — it was a label.
+
 When something does warrant action, compose `/knowledge-intake` for the disposition and tier, and prefer the skill that owns the work over an improvised edit. When in doubt, write the learning into this output and change nothing — it will resurface and earn its change if it's real.
