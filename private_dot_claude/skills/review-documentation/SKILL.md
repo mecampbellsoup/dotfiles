@@ -1,7 +1,7 @@
 ---
 name: review-documentation
 description: Review the documentation web for any project — CLAUDE.md, memory files, living docs, skills, or docs/ — checking for redundancy, gaps, coherence, and cross-references. Invoke proactively before adding new docs or after editing CLAUDE.md or memory files. Invoke reactively when the user asks "is this documented?", "should we document X?", or "review the docs". For Swarf repos (has .claude/skills/), defer to that repo's own project /review-documentation, which adds doc-drift-detector, skill chaining audit, and deeper tooling.
-user_invocable: true
+user-invocable: true
 ---
 
 # Review Documentation
