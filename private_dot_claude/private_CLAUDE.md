@@ -2,143 +2,15 @@
 
 Matt Campbell — software engineer, co-founder of Swarf AI. Lives in Brooklyn, NY with wife Yury. Previously at CoreWeave for 5 years.
 
-## Email Accounts
+## Task-specific rules live in skills
 
-| Account | Use for |
-|---------|---------|
-| `mecampbell25@gmail.com` | Personal — taxes, personal finance, personal correspondence |
-| `matt@swarf.app` | Work — Swarf business, investors, professional contacts |
+These load on demand instead of every session. Invoke the skill before doing the work — the rules in them are the accumulated gotchas, not general advice.
 
-**Email ops:** Always use `gog` for all email — both accounts. Never use Gmail MCP; `gog` handles everything and is authenticated to both accounts.
-
-**Calendar ops:** Same rule — use `gog calendar`, not the claude.ai Calendar MCP (its session expires constantly; failed twice before `gog` worked first try, 7/2/26). Create: `gog -a <acct> calendar create primary --summary "..." --from "2026-07-30T09:00:00-04:00" --to "..." --timezone "America/New_York" --description "..." --json`. Check for conflicts before confirming availability: `gog -a <acct> calendar conflicts --from <date> --to <date> --all --json` (queries every calendar within that account) — `-a` takes one account at a time, so run it once per account when checking "all accounts."
-
-**gog gotchas (recurring):**
-- There is no `gog gmail message get` — single message = `gog gmail get <id> --json` (or `gog gmail raw <id>` for lossless API JSON)
-- **`gog gmail raw <id>` is NOT a real `.eml`/RFC822 file** — despite the name, it dumps the Gmail API's JSON message resource (same as `get --json`), just unformatted. Piping it to a `.eml` file and attaching that to another email produces a file mail clients can't open ("No Sender / No Subject" in Mail.app) — caught 7/22/26 only because Matt opened the attachment himself. For an actual raw RFC822 blob (e.g. to attach a source email as evidence in another draft), use `gog gmail get <id> --format=raw --json`, then base64url-decode the `.raw` field in the response — that's real SMTP/MIME content, confirmed via `file` reporting "SMTP mail text."
-- Plain output truncates bodies and drops CC — use `--json` + base64 decode
-- **`--json` shape:** `gmail search` returns `{threads:[{id,date,from,subject,labels,messageCount}]}` — flat fields, NO payload (don't look for `messages`/headers there). Full content via `gmail thread get <id> --json` → `thread.messages[].payload.headers` (read each header's `.get('value')` — bare `['value']` KeyErrors on some headers) and base64-decode `body.data` walking `parts`.
-- Account alias: use full email (`mecampbell25@gmail.com`), not short alias
-- **Attachment flag (drafting):** `--attach` not `--attachment` — wrong flag silently fails draft creation. Also: **`--attach` splits its value on commas** — a filename containing a comma is parsed as multiple paths and fails with "no such file or directory." Rename the file comma-free before attaching.
-- **`--to` (and `--cc`) also comma-split:** pass multiple recipients as one comma-separated value (`--to "a@x.com,b@y.com"`), never repeated `--to` flags — a repeated flag silently keeps only the last value.
-- **Deleting a draft non-interactively needs `--force`:** `gog gmail draft delete <id>` refuses without it ("not recoverable... without --force") — and if stderr is suppressed (`2>/dev/null`), the refusal is invisible and the draft silently survives as an orphaned DRAFT message on the thread. Always pass `--force`, and verify deletion via thread message labels, not the command's silence. (Bit on 7/16/26: "deleted" draft resurfaced in a thread count check.)
-- **Downloading an attachment:** `gog -a <acct> gmail attachment <messageId> <attachmentId> --out <path>` — both IDs are *positional* (not `--attachment-id`), and the save flag is `--out` (not `-o`). Get the attachmentId from the message payload parts (`body.attachmentId`). **Attachment IDs are ephemeral** — an ID captured in an earlier thread fetch fails later with "Invalid attachment token"; re-fetch the message for fresh IDs immediately before downloading.
-- **A re-attached file with a familiar filename is a theory about its contents, not a verified fact** (see § Workflow "State theory, then prove") — a reply that re-sends a file matching one already seen (e.g. a shared scope doc) could be an annotated/updated version, not the same content. Download and read it, or `diff`/checksum it against the prior version, before characterizing it in a log, summary, or draft.
-- **An email body's description of its own attachment is not the attachment.** The rule above covers *re*-attached files; this covers the more common case — never characterizing an attachment you haven't opened at all. If a message says "attached is X," download and read X before summarizing it into a living doc, a status report, or a draft. The sender's one-line description is routinely incomplete or wrong: Jason Hemsley's 7/13/26 email said "three main phases" and the attached one-pager showed **four** — the missing Phase 4 (Wealth Transfer & Business Transition Planning) was the exact estate/transfer mandate a competing advisor was pitching, so the omission changed the competitive picture, not just a detail. That wrong "3-phase" summary was written into `wealth-advisors.md` on 7/25 and repeated on 7/27; it was only caught because Matt asked "did we actually read and ingest that email?" Attachment IDs are ephemeral (see the download bullet above) — re-fetch the message for fresh IDs, then read.
-- **HTML order confirmation emails (SharkNinja, Amazon, retailers):** product name is buried past a CSS preamble (~2,500 chars of style tags + `&zwnj;` spam). Read `text[2000:6000]`, not `text[:3000]` — or strip `<style>` blocks first before stripping all tags.
-- **Formatted (HTML) drafts:** `draft create` supports `--body-html-file <path>` (and `--body-html`) alongside plain `--body` — pass both for a proper multipart/alternative. Plain `--body` alone renders as unformatted text; if Matt says a draft "looks unformatted," recreate it with an HTML body (inline styles, no `<style>` blocks).
-- **Forwarding an email: use `gog gmail forward --to <addr> --note "..." <messageId>`, not a hand-built `draft create` + `--quote` + re-attach.** This is a real top-level command (`gog gmail --help` lists it separately from `draft`, easy to miss) — `--note`/`--note-file` adds context above the forward, and original attachments carry over automatically (no re-downloading/re-attaching by hand). It appears to be send-only, no draft/preview flag — so confirm the `--note` text and recipients with Matt before running it, same gate as any other send. Caught 7/31/26 after manually reconstructing a forward (inline quote + re-attached PDF) for over an hour when this command existed the whole time.
-- **A vendor's stated contact address can be send-only — check `Reply-To`/`Return-Path` before concluding there's no route in.** A collections/notice email that instructs you to "email us at X" may come from an address that hard-rejects inbound mail: `550 5.4.1 Recipient address rejected: Access denied`. That bounce is not a dead end and not a typo — the working inbox is usually sitting in the message's own headers under a different domain. Pull them with `gog -a <acct> gmail get <id> --json` and read `Reply-To` (and `Return-Path`) rather than trusting the `From:` or the body text. Case 2026-08-19: Stop & Shop's chargeback notice came `From: receivables@stopandshop.com` and told Matt to reply there; that address bounced within minutes, while the message's `Reply-To: receivables@peapod.com` (Peapod = Ahold Delhaize's delivery arm) accepted the identical text with no bounce. Corollary: if the original send CC'd a second address that did *not* bounce, the message already landed — say so rather than implying total failure.
-- **Token expired (`invalid_grant: "Token has been expired or revoked"`):** this is an interactive re-auth, not something to retry around. Stop and ask Matt to run `gog auth add <account> --services drive,docs,gmail,calendar` himself (opens a browser) — don't attempt the OAuth flow or guess a fix.
-- **Sharing a large local file with someone:** use `gog drive upload <path>` (uploads directly from disk) + `gog drive share <fileId> --to=user --email=<addr> --role=reader --notify` (grants access, sends Drive's own notification email) — not the Drive MCP tool (`create_file`), which requires the file's content to pass through the model's own context and fails/is impractical above roughly 200KB (surfaced by the Read tool's 256KB cap when trying to base64-encode a multi-MB file for it). Don't default to emailing a raw attachment either — Gmail caps at 25MB, and this user treats an unrequested email deliverable as a decision to confirm first, not a default channel (bit 7/20/26: drafted an email with a 45MB zip attached before being redirected to Drive).
-
-**Drafting rules:**
-- **Summarizing doc changes in an email:** extract the actual language from the source doc — don't paraphrase from memory. The doc and the email body are separate files; a fix in one doesn't propagate to the other.
-- **Pre-draft gate (run before writing the first word):**
-  1. Extract counterparty's own vocabulary from the thread — use their terms, not generic ones
-  2. All cost/fee references: institutional framing ("Focus fees," "what I pay") — never "your fee"
-  3. For each question you plan to ask: can the recipient actually answer it? Flag rhetorical or presupposing questions before drafting
-  4. If the topic has a living doc (`~/personal/<topic>.md`), read it first — don't draft questions already answered there
-  5. If a question is about a vendor's public pricing or documented scope, verify via web search before listing it as open
-  6. Never assume two vendors/advisors are aware of each other or of a parallel engagement — confirm before referencing one in correspondence with another
-  7. Match specificity to what the user actually knows — don't invent implementation details, and don't assert something is unaffected by a change without checking
-  8. If the draft confirms/accepts a specific date or time, check `gog calendar` across ALL accounts for that date first — a blanket "yes that works" is worse than surfacing a real conflict as a caveat (e.g. "works great except for an X call at Y"). Case: drafted "Thursday works great" to John Saunders 7/22/26 without checking; Matt's own edit revealed an 11am GC call.
-- **Pre-send gate (run before presenting or sending any draft):**
-  1. CC list extracted from thread JSON — never assumed empty
-  2. Required attachments (e.g. scope PDF) actually attached, not just referenced in text
-  3. The draft-create tool call actually ran — confirm before saying "ready to review, say send it"
-  4. Explicit "send it" received — past-tense or ambiguous mentions ("sent it") are not a send command
-  5. If the body was staged in a scratch file that went through multiple revision rounds, confirm the draft-create call read the file's *current* content, not an earlier write — re-fetch the created draft and check its actual body text before sending, don't trust that the create call used the latest version
-  6. Confirm the draft is grammatically addressed *to* the recipient, not narrated *about* them — a draft composed while explaining context to the user (third person: "she's probably got...") can accidentally get sent as-is instead of being rewritten in second person ("you probably have..."). Read the final text once as if you were the recipient before sending. Case: a text meant for Valerie was drafted/sent in the register of talking to Matt about Valerie ("she's probably got my old... info on file") — caught only because Matt read it after send and un-sent it.
-- **Verifying recipient addresses**: Never guess email format (e.g. `firstname.lastname@domain.com`). Before sending to a named individual, confirm via `gog -a <account> gmail search "from:domain.com in:anywhere"`. Name-keyword searches miss people whose email uses initials (`lpelley@` not `lance.pelley@`). Domain search first, always.
-- **Verifying addresses for cold outreach to a new external contact (no prior email history to search):** third-party contact-lookup aggregators (RocketReach, Wiza, ZoomInfo, etc.) are unreliable — they've produced both a wrong address (one character off, e.g. `jrwaxman@` vs. the real `jwaxman@`, which bounced) and a literal placeholder that looked like a real address at a glance. Treat any aggregator result as a lead, never as the address to send to. Always verify against the organization's own site — an attorney/staff bio page or the org's contact page — before sending. If the org's own site doesn't publish the individual's email, don't guess a pattern; use the org's general contact address, a web contact form, or ask the user how to proceed.
-- Reply-all by default: CC everyone already on the thread, plus anyone else who is a relevant party to the subject matter. If you're not confident someone should be included, verify rather than omit. **Before creating each reply draft, extract the CC field from the thread JSON — never assume it's empty, never invent recipients.** (See § gog Gmail Drafts below for the extraction snippet and full draft creation template.)
-- Reply on the most recent thread for the topic — check thread dates first
-- For reply drafts: `--reply-to-message-id <last-msg-id>` + `--quote` + `--cc <extracted>`. To revise the body, delete and recreate — `draft update --body` silently drops the quote. Dollar signs get eaten by bash in any inline flag value (`--body`, `-m`, etc.) — see general rule under § Workflow.
-- **`--quote` CID failure:** Before using `--quote`, scan whether the email has CID attachments: `gog gmail raw <msg-id> | grep -c 'Content-ID:'`. **Count 0 is NOT safe** — the HTML can *reference* a `cid:` with no matching MIME part (e.g. a quoted signature image from an earlier message), which also breaks `--quote` ("preserve quoted inline images... no matching MIME part"); check `grep -c 'cid:'` on the raw HTML too. If either count > 0, skip `--quote` entirely — go straight to manual plain-text extraction and prepend `> ` to each line. Never skip the quote. Use `--body-file /tmp/reply.txt` (body + quote combined) instead of `--quote`. **Even with both counts 0, `--quote` re-attaches the quoted message's regular attachments to your draft** (7/17/26: a YouTube-thumbnail image from the original message landed on a tax reply) — after any `--quote` draft create, check the returned JSON's `attachments` field; anything unexpected → delete and recreate with the manual-quote `--body-file` pattern.
-- **Sent vs draft:** a message appearing in `gog gmail thread get` output does NOT mean it was sent — drafts show up in threads too. Before reporting a message as sent, check its `labelIds` (`SENT` vs `DRAFT`).
-- **After sending:** `gog draft send` sometimes leaves a stale draft artifact. Verify the send via thread message count (`thread get --json` → `len(messages)` increased) and delete any leftover draft.
-- **`draft send` needs the draft ID, not the message ID:** `draft create`'s JSON output returns both `draftId` (e.g. `r-...`) and `message.id` — passing the message ID to `draft send` 404s even though the draft is not stale. This is a different root cause from the Mail.app-consumed-the-draft 404 below (no Mail.app involved); the fix is simply to pass `draftId`, not `message.id`.
-- **Mail.app + API drafts:** `gog draft create` drafts behave identically to native Mail.app drafts when `--quote` is included: they sync to the Drafts mailbox (~30s IMAP), thread correctly with the original, and show Charlie's email collapsed below ("See More from X") which expands inline. Without `--quote`, the draft is bare — no quoted original — which looks orphaned even though threading is technically correct. Always use `--quote` for reply drafts (after the CID check). They do NOT appear when viewing the original from Inbox — but neither do native drafts. **If `draft send` 404s:** Mail.app consumed the draft ID — don't investigate, recreate immediately and send in one compound step (`gog ... draft create ... && gog ... draft send <new_id>`). **If Matt says he edited a draft in Mail.app:** the old message ID is stale — run `gog -a <account> gmail draft list --json` first to get the current draft ID before reading or acting on it. **Any draft-op 404 (delete/get/send), even unannounced:** same cause and fix — `draft list --json`, re-resolve (edited drafts come back with an `s:`-prefixed ID). Before recreating, extract the current draft's body (text/html part) and diff against yours — Matt's Mail.app edits must survive the recreate.
-- **Terminology:** before drafting a reply, extract the counterparty's own terms from the thread — use their vocabulary, not inferred labels.
-- **Never send a composed communication without explicit approval ("send it").** Draft → show → wait; expect 1–3 revision rounds. **This gate is scoped to things you wrote on Matt's behalf that go out under his name** — emails, iMessages, forwards, texts. It is NOT a general rule for every irreversible action: a web form Matt asked you to complete (a dispute, a return, a checkout he authorized) is governed by the ambiguity test under § Workflow instead, and "just do the whole thing," "you have the context," or "do it yourself" resolves that ambiguity — proceed, don't re-ask at each step. **In a timing-sensitive flow a needless approval pause is itself destructive:** Amex's dispute form self-redirects after ~1 minute idle, so stopping to confirm at the final step blew away a fully-completed form and forced a draft recovery (2026-08-17, dispute D-101540425). Once Matt has authorized the whole task, keep moving and report what you did afterward.
-- Only include facts the user stated or directly evidenced in the thread — no inferred context
-- Never attribute a statement to a person unless confirmed
-- Plain, direct prose — no dramatic framing, no gushing
-- **No equivocation:** don't tack a softening qualifier onto a stated option/preference (e.g. "Could show you X — but really whatever sounds good to you"). State it plainly and leave room for the recipient to reply. Same idea applies to sign-offs — once logistics are actually settled, close warmly ("Looking forward to it") rather than re-opening the loop ("Let me know and I'll work around it") when there's nothing left to decide. Matt, 7/22/26: "don't equivocate so much. it doesn't help or add anything. just make statements, state preferences/asks, ask questions, and leave room for the recipient to reply. simple!"
-- Before sending: verify every question in the draft is one the recipient can actually answer — not rhetorical, not presupposing a framing they haven't seen
-- Match the audience: deferential + warm greeting for older/old-school vendors; casual for friends/family
-- Before asking a vendor/org a question, sweep email + texts for an answer they already gave
-
-- **"Did X get [thing]?"** — parse who X is before searching. Check whether X was on the CC of the relevant thread; don't report from the asker's inbox perspective.
-
-**Search strategy:**
-- Search literal words first; simplest query before compound ("andrew", not "andrew socceria")
-- **An identifier you already hold beats any wording you are guessing — search it first, every time.** If a prior step handed you an email address, a record/conversation ID, an order number, or a URL fragment, that string is in the target message verbatim; invented phrasings ("thumbs up", "feedback received") are a theory about how someone worded it. Applies to Slack, gog, and imsg alike. Corollary: if you also hold an exact timestamp, read that channel/window directly instead of searching at all. (Bit 2026-08-16: four guessed Slack queries returned zero and ended in asking Matt for a permalink, while `saudermachine` and the conversation ID `32377` — both already pulled from the prod DB minutes earlier — each found it on the first try.)
-- Zero results → broaden, never narrow. Split compound words: "metrogroup" → try "metro" and "group"
-- Add `in:anywhere` when results seem incomplete (catches trash/spam)
-- Find all threads on a vendor topic before drafting — helpdesk replies come from subdomains, not `vendor.com`
-- **Sweeping a vendor/person for updates: search `from:<address> in:anywhere`, never just re-poll known thread IDs** — counterparties start NEW threads (new subject lines) and those never appear in a thread-ID poll. (Bit on 7/20/26: Armen proposed a meeting date in a fresh "Meeting" thread on Friday and nudged Monday; three thread-ID sweeps missed it while the doc claimed he was silent for 5 days.)
-- **"Get me synced on [topic/domain]" means sweep every counterparty in that topic's living doc, not just the person named.** Matt names one contact as the entry point to a whole domain — the ask is the domain. Open the topic's `~/personal/<topic>.md`, take every party in the **Now** table, and run `from:<address> in:anywhere` for each before reporting. Also consider `/sync-trackers`, whose triggers ("any updates?", "where do things stand?") cover this phrasing. Bit on 7/27/26: "I need to get back to Clay at Schwab, get synced up on that domain" → swept only Clay/Schwab, skipped the JPM row sitting right beside it in the same table, and missed an unanswered $17.5mm VPF + AQR Flex 300 proposal from Pat Duffy that had been sitting 4 days. Matt had to surface it himself.
-- **Prior session found an email via thread ID?** Extract the thread ID from that session's JSONL first (`grep -o '"thread_id":"[^"]*"' ~/.claude/projects/.../session.jsonl` or look at prior Bash tool calls), then `gog gmail thread get <id>` directly. Keyword searches for retailer/vendor emails frequently return 0 results even when the email exists.
-- **`gog auth list` is a lower bound on the user's real email accounts, not the full set.** If an exhaustive search across every account in `gog auth list` comes up empty or only surfaces near-misses, don't conclude the purchase/email doesn't exist — ask the user whether another account exists that isn't authenticated yet. (Case 7/29/26: a Belkin charger purchase was invisible across `mecampbell25@gmail.com` and `matt@swarf.app`; the actual order lived in `matt@zipmark.com`, an account never in `gog auth list` until the user found it himself via a native Mail.app "All Mailboxes" search and screenshotted the hit.)
-- **Two rounds of broadened keyword search with no confident hit → ask the user to search their own Mail.app rather than keep guessing new keywords.** Native Mail.app's "All Mailboxes" search covers accounts/folders a per-account `gog` sweep can miss or under-index. Don't treat a third or fourth keyword variant as more likely to succeed than the first two that failed.
-- **"Refresh me on that convo" / "where did we land on X" / "what did we decide about X" is a `/recall` trigger — invoke the skill, don't freehand a transcript grep.** The skill exists precisely for half-remembered past conversations and sweeps every channel (Slack, Gmail both accounts, iMessage, LinkedIn, Facebook, Photos OCR) rather than the one surface you happen to think of. Third occurrence 2026-08-16 (prior two logged 2026-07-21 in [[feedback_proactive-skill-consideration]]), which is why this is now a rule rather than another memory data point: asked to refresh where the home-security-camera conversation landed, I grepped `~/.claude/projects/` and `~/personal/` and reported "No prior conversation found" — Matt had to push back twice and name `/recall` and `/find-conversation` himself before the right search ran.
-- **Your transcript search covers Claude Code only — the claude.ai app is a blind spot, so never state a bare "we never discussed this."** Sessions in the app leave nothing in `~/.claude/projects/`, and the app cannot write to `~/personal/` either, so substantial work done there (research, comparisons, published artifacts) exists in *neither* place a CC session naturally looks. Scope every negative to what you actually searched — "no Claude Code session found; was this in the app?" — and treat the app as the first hypothesis when Matt is confident a conversation happened and the transcripts are empty. **The recovery route that works: find the artifact/output where he *shared* it** — an artifact URL texted to Yury, a link in an email — via iMessage or gog, then read the artifact itself (see [[reference-claude-artifact-accounts]]; artifacts published under his other account fail WebFetch, so open them in the logged-in browser with Playwright). Case 2026-08-16: a full 4-way camera comparison built on 7/16 was invisible to every transcript and doc search, but its URL was sitting in the iMessage thread with Yury and the artifact rendered fine in Playwright.
-
-## iMessage (imsg)
-
-- Find any chat (incl. groups) by participants: `imsg chats --limit 500 --json`, filter on `contact_name` — **never ask for a phone number**
-- All `--json` output is JSONL (one object per line) — parse line-by-line, never `json.load`
-- Read messages: `imsg history --chat-id <id> --limit N` (there is no `messages` subcommand; plain output is a readable transcript)
-- Send: `imsg send --chat-id <id> --text "..."`
-- `imsg search` is broken — search content by extracting `attributedBody` from the sqlite DB via Python. **Don't filter `WHERE handle_id IS NOT NULL`** — sent messages have NULL `handle_id`, so that filter silently drops everything *you* sent (real miss: a `LIKE '%electric%'` returned zero hits because the match was in Matt's own sent message; the thread was only found by dumping a date window). Filter on `attributedBody IS NOT NULL`, and add a `date BETWEEN` window when you know roughly when.
-- Before drafting, read recent sent messages in that chat and match style (short bursts, casual)
-- Same draft → approval → send gate as email — never send without "send it"
-
-## 1Password CLI
-
-**`gh` commands:** `gh` authenticates via the macOS keychain independently, so `op run --` buys it nothing — don't add the wrapper to a bare `gh` call. But it isn't harmful either, and plenty of project skills/docs prescribe `op run -- gh`; following them is fine, not a violation of this rule.
-
-**When an `op run -- <cmd>` call errors, retry `<cmd>` without the prefix before diagnosing anything else.** `op run` failures surface as though they came from the wrapped command, so they get attributed to the wrong tool. The real case (2026-07-26): `op run -- gh` failed repeatedly with `dial tcp ...: connect: network is unreachable` while `curl https://api.github.com` returned 200, git-over-ssh worked, and plain `gh` succeeded instantly. A subagent read that as a genuine outage, correctly applied the 2-attempt escalation rule, and stopped — costing an agent stop on a PR that was ready to merge. The failure is transient (the same commands worked before and after; an 11-command sweep later passed clean, even with `op whoami` reporting no session), so the fix is retry-without-the-prefix, never "this tool is broken" or "the guidance prescribing it is wrong."
-
-**1Password Environments (MCP):** The `1password` MCP server is configured. Use `mcp__1password__*` tools for Environments (`.env` file management). Requires one Touch ID prompt per CC session via `mcp__1password__authenticate`.
-
-**General `op` vault queries** (`op item get`, `op read`, `op item list`): These prompt for Touch ID on every call from within Claude Code (no-TTY by design). Use them when needed and expect a prompt. Do not wrap with `op run --` — it doesn't help.
-
-**Live web-session logins (need to actually authenticate into a site, not just reference a field):** The Playwright profile persists across sessions — check whether it's already logged in before ever prompting for a login. Navigate first to a page that only renders when authenticated (account home, order history, dashboard) for that site; if it loads real account content, the session is still live — proceed directly, no login prompt. A redirect to a sign-in-shaped URL is not automatically a credential wall: if that page shows the account pre-recognized (email pre-filled, a one-click "Sign in as [name]" / "Continue as [name]" button) with no password/2FA field visible, it's a session-confirmation interstitial — click it through yourself, no handoff needed. Only hand off if, after that, an actual password or 2FA field appears (or the page shows a fully logged-out state with no recognized identity at all): don't attempt to print 1Password item fields (username/password) directly to stdout first — the permission classifier blocks this as credential materialization, regardless of intent — go straight to Playwright, open the login page, then hand off authentication to the user (they type credentials/2FA themselves) rather than trying to retrieve-then-type the credential yourself. **Close out sessions when the task concludes:** once a Playwright-driven task is done (dispute filed, cancellation confirmed, form submitted), call `browser_close` — don't leave an authenticated tab (bank, subscription account, etc.) sitting open indefinitely. Skip the close only if another step in the same turn will keep using the same browser, or the user asks to leave it open for their own review.
-
-If you see `missing required scopes`, check your GitHub CLI token scopes.
-
-**Sharing vault access (Business/Teams accounts, e.g. adding a family member to a shared vault):** the pattern is `op vault create <name>` → `op vault user grant --vault <name> --user <email> --permissions allow_viewing,allow_editing` → `op item move <item> --current-vault <src> --destination-vault <name>`. A brand-new vault is isolated by default (no auto-grant to a `Team Members`-style group) — verify with `op vault group list <name>` before granting individual users. If a grant 400s ("structure of request was invalid") for a specific user but the identical command works for another already-`ACTIVE` user, the cause is usually the target user still being `PENDING` (accepted the invite but hasn't been confirmed/completed setup) — check `op user get <email>` for `state`, not a syntax issue.
-
-**`op item move` prints full plaintext secret values in its JSON output, even without `--reveal`.** Unlike `item get`/`item list`, which conceal fields by default, a move dumps every field's actual value (passwords, security tokens) into stdout — a live secret-leak vector, same class as the "never pipe a secret's raw value into tool output" rule under § Workflow, just a different mechanism. Don't echo or summarize that output back to the user; treat the command's own stdout as sensitive and let it pass silently.
-
-## gog Gmail Drafts
-
-Before drafting any reply, extract CC from JSON — plain text silently drops them:
-
-```bash
-gog -a <account> gmail thread get <thread-id> --json 2>/dev/null | python3 -c "
-import json, sys
-data = json.load(sys.stdin)
-msgs = data['thread']['messages']
-for m in msgs:
-    h = {h['name'].lower(): h['value'] for h in m.get('payload', {}).get('headers', [])}
-    if h.get('cc'): print('CC:', h['cc'])
-"
-```
-
-Then draft with all extracted CC addresses:
-
-```bash
-gog -a <account> gmail draft create \
-  --to "recipient" \
-  --cc "cc1@example.com, cc2@example.com" \
-  --reply-to-message-id <msg-id> \
-  --quote \
-  --body "..."
-```
+| Skill | Covers |
+|-------|--------|
+| `email-ops` | Email accounts, all `gog` usage, drafting + pre-send gates, iMessage, search strategy |
+| `1password-ops` | `op` CLI, credentials, vault sharing, live web logins |
+| `codex-sync` | Mirroring CLAUDE.md → AGENTS.md, the migrate-to-codex script |
 
 ## Workflow
 
@@ -178,30 +50,4 @@ gog -a <account> gmail draft create \
 ## Branch Naming
 
 Use initials `mc` for branches: `mc/323-fix-auth-flow`
-
-## Codex Sync
-
-**Rule:** Every CLAUDE.md that is NOT inside a `.claude/` directory gets a mirrored AGENTS.md — direct copy, no substitutions — except third-party repos you can't commit to. Run this sync whenever CLAUDE.md changes in any owned repo. **Exception (explicit inclusion):** the global user file `~/.claude/CLAUDE.md` IS mirrored to **`~/.codex/AGENTS.md`** — that is where Codex reads global instructions (CODEX_HOME; verified against the Codex manual 7/1/2026). Do NOT mirror to `~/.claude/AGENTS.md` — Codex never reads that path (an old copy there was removed 7/1/2026). Per-repo `.claude/CLAUDE.md` files (e.g. skill-adjacent) are NOT mirrored.
-
-**Repos needing direct-copy sync** (pattern: `cp CLAUDE.md AGENTS.md && git add AGENTS.md && git commit -m "sync AGENTS.md: ..."`):
-- `~/personal/`
-- `~/personal/finance/`
-- `~/code/swarf/business-vault/`
-- `~/code/swarf/webapp/apps/chatbot/` — use `chore:` prefix (commitizen required)
-- Webapp worktrees (webapp-dev, webapp-dev-2, webapp-dev-3) — sync the chatbot subdir; picks up at merge
-
-**The copy is a point-in-time snapshot, so it has to be the LAST thing before the commit — re-run it after any rebase that touched the source, and confirm with `diff` rather than assuming.** A `cp` taken earlier and committed later doesn't just go stale: `AGENTS.md` then carries pre-rebase text for lines the rebase changed in `CLAUDE.md`, so committing it silently *reverts* incoming content. This is the snapshot-is-not-a-merge rule under § Workflow arriving through a different mechanism than `git stash` — same failure, no stash involved, and nothing warns. Near-miss 8/14/26 (`apps/chatbot`, PR #1464): a mirror copied before a rebase would have reverted a sibling PR's just-landed wording; caught only by re-running `diff CLAUDE.md AGENTS.md` afterward, which is the cheap check that makes this visible.
-
-**`~/code/swarf/webapp` AGENTS.md + subagents + MCP:** Run the migrate script instead of `cp` (handles "Claude Code" → Codex substitutions). **Always pass `--mcp --subagents`. Never run it bare:**
-```bash
-python3 ~/.codex/skills/migrate-to-codex/scripts/migrate-to-codex.py \
-  --source ~/code/swarf/webapp --target ~/.codex --mcp --subagents
-```
-This syncs AGENTS.md, 3 MCP servers, and 5 subagents. Run after significant CLAUDE.md, subagent, or MCP changes.
-
-**Its `AGENTS.md` output lands on `~/.codex/AGENTS.md` — the global slot — carrying webapp content.** That is a layer violation, not just a file conflict: `~/.codex/AGENTS.md` holds the *global* mirror of `~/.claude/CLAUDE.md`, while the webapp's own project instructions belong at `webapp/AGENTS.md` (already synced separately). No flag skips the instructions stage, so re-copy the global mirror after every script run: `cp ~/.claude/CLAUDE.md ~/.codex/AGENTS.md`.
-
-**Omitting the flags runs all three stages including skills, which is the one stage you never want.** The skills stage writes *copies* of every `.claude/skills/*/SKILL.md` into `~/.agents/skills/` — and Codex loads that directory, so each copy then shadows the live skill under the same name while silently drifting from it, outliving deletions, and mangling frontmatter (it drops `user-invocable` and leaves a `## MANUAL MIGRATION REQUIRED` stub in the body). Fifteen such copies accumulated between March and July 2026 before being deleted; the bare command recreates all of them. Confirm with `--plan` before any run — a plan naming `stage: skills` means the flags were forgotten.
-
-Codex reaches the webapp's project skills through the repo's committed `.agents/skills/` symlinks instead — no copies, no drift. See `docs/AI_TOOLING.md` § Codex for how that bridge works and when to rebuild it.
 
