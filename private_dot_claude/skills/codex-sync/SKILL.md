@@ -1,6 +1,6 @@
 ---
 name: codex-sync
-description: Mirroring CLAUDE.md files to AGENTS.md for Codex, including which repos need a direct-copy sync, the webapp migrate-to-codex script and its required --mcp --subagents flags, why the bare command is destructive (it writes drifting skill copies into ~/.agents/skills), and the rule that the copy must be the LAST step before committing or a rebase silently reverts content. Load whenever a CLAUDE.md is edited in an owned repo, before committing a CLAUDE.md change, and whenever Codex, AGENTS.md, or ~/.codex comes up. Triggers: AGENTS.md, codex, sync agents file, migrate-to-codex, edited CLAUDE.md.
+description: 'Mirroring CLAUDE.md files to AGENTS.md for Codex, including which repos need a direct-copy sync, the webapp migrate-to-codex script and its required --mcp --subagents flags, why the bare command is destructive (it writes drifting skill copies into ~/.agents/skills), and the rule that the copy must be the LAST step before committing or a rebase silently reverts content. Load whenever a CLAUDE.md is edited in an owned repo, before committing a CLAUDE.md change, and whenever Codex, AGENTS.md, or ~/.codex comes up. Triggers: AGENTS.md, codex, sync agents file, migrate-to-codex, edited CLAUDE.md.'
 ---
 
 ## Codex Sync
