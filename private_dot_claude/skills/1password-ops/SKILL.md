@@ -1,6 +1,6 @@
 ---
 name: 1password-ops
-description: Matt's 1Password CLI and credential-handling rules — op run vs bare gh, Touch ID behavior in Claude Code, the 1Password Environments MCP, live web-session logins via the persistent Playwright profile (and when to hand off authentication rather than materialize credentials), sharing vault access with family, and the fact that `op item move` prints plaintext secrets. Load before any `op` command, before logging into a site on Matt's behalf, before granting vault access, and whenever a task needs a credential, token, API key, or password. Triggers: 1password, op run, op item, vault, credential, secret, API key, token, log me in, sign in to.
+description: 'Matt''s 1Password CLI and credential-handling rules — op run vs bare gh, Touch ID behavior in Claude Code, the 1Password Environments MCP, live web-session logins via the persistent Playwright profile (and when to hand off authentication rather than materialize credentials), sharing vault access with family, and the fact that `op item move` prints plaintext secrets. Load before any `op` command, before logging into a site on Matt''s behalf, before granting vault access, and whenever a task needs a credential, token, API key, or password. Triggers: 1password, op run, op item, vault, credential, secret, API key, token, log me in, sign in to.'
 ---
 
 ## 1Password CLI
