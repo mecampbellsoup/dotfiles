@@ -10,7 +10,6 @@ These load on demand instead of every session. Invoke the skill before doing the
 |-------|--------|
 | `email-ops` | Email accounts, all `gog` usage, drafting + pre-send gates, iMessage, search strategy |
 | `1password-ops` | `op` CLI, credentials, vault sharing, live web logins |
-| `codex-sync` | Mirroring CLAUDE.md → AGENTS.md, the migrate-to-codex script |
 
 ## Outbound communications — always-on gates
 
