@@ -26,7 +26,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "input=$(cat); dir=$(echo \"$input\" | jq -r '.workspace.current_dir'); branch=$(git -C \"$dir\" rev-parse --abbrev-ref HEAD 2>/dev/null); model=$(echo \"$input\" | jq -r '.model.display_name'); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); printf '\\033[36m%s\\033[0m' \"$(basename \"$dir\")\"; [ -n \"$branch\" ] && printf ' \\033[35mon\\033[0m \\033[33m%s\\033[0m' \"$branch\"; printf ' \\033[32m%s\\033[0m' \"$model\"; [ -n \"$remaining\" ] && printf ' \\033[2m(%s%% left)\\033[0m' \"$remaining\"; echo"
+    "command": "input=$(cat); dir=$(echo \"$input\" | jq -r '.workspace.current_dir'); printf '\\033[01;32m%s@%s\\033[00m:\\033[01;34m%s\\033[00m\\n' \"$(whoami)\" \"$(hostname -s)\" \"$dir\""
   },
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
@@ -71,7 +71,7 @@
       }
     }
   },
-  "effortLevel": "medium",
+  "outputStyle": "Concise",
   "askUserQuestionTimeout": "60s",
   "tui": "fullscreen",
   "autoDreamEnabled": true,
@@ -87,37 +87,37 @@
   "autoMode": {
     "allow": [
       "$defaults",
-      "Bash(docker compose:*) container lifecycle actions (up, down, restart, rebuild, rm) for local dev/test profiles in this repo \u2014 explicitly documented as pre-approved, no-permission-gate developer actions in .claude/rules/containers.md",
-      "Bash(make dev:*), Bash(make test:*), Bash(make stop-*:*), Bash(make reset-*:*) \u2014 Makefile wrappers around the above, same repo-documented carve-out"
+      "Bash(docker compose:*) container lifecycle actions (up, down, restart, rebuild, rm) for local dev/test profiles in this repo — explicitly documented as pre-approved, no-permission-gate developer actions in .claude/rules/containers.md",
+      "Bash(make dev:*), Bash(make test:*), Bash(make stop-*:*), Bash(make reset-*:*) — Makefile wrappers around the above, same repo-documented carve-out"
     ],
     "soft_deny": [
       "$defaults",
-      "Remote/staging or production `manage` service invocations run in volume (batch scripts, repeated ad hoc shell_plus calls) against swarf-staging or swarf-prod \u2014 this repo's docs flag repeated invocations as having caused real resource exhaustion incidents"
+      "Remote/staging or production `manage` service invocations run in volume (batch scripts, repeated ad hoc shell_plus calls) against swarf-staging or swarf-prod — this repo's docs flag repeated invocations as having caused real resource exhaustion incidents"
     ],
     "environment": [
       "### Org-wide",
-      "**Organization**: Swarf-Inc (GitHub org) \u2014 repo `Swarf-Inc/webapp`; a legacy sibling `Swarf-AI/webapp` is referenced in repo docs as a historical/migrating home for issues, but that org-split context is unverified provenance (repo-authored docs only, not corroborated) and is noted, not adopted, here",
-      "**Cloud provider(s)**: DigitalOcean (Spaces object storage, droplets referenced in repo docs \u2014 `doctl` CLI usage corroborated in transcript-mining, 5\u00d7); Google Cloud (`gcloud` CLI usage corroborated in transcript-mining, 5\u00d7)",
-      "**Repository visibility**: PUBLIC status not indicated for this repo \u2014 gh reports Swarf-Inc/webapp as private (authoritative)",
-      "**Internal sharing / snippet hosting**: None configured \u2014 treat public paste/gist services as outside the trust boundary",
-      "**Secrets management**: 1Password (`op` CLI) \u2014 heavily used (961\u00d7 in this project's transcripts); `op run --`, `op read`, `op item get` patterns confirmed via repo docs and usage",
-      "**Default / protected branches**: `main` (default branch); ruleset `Protect main` is active on Swarf-Inc/webapp (gh-verified, authoritative) \u2014 treat `main` as protected even though no classic branch-protection rule is separately listed",
+      "**Organization**: Swarf-Inc (GitHub org) — repo `Swarf-Inc/webapp`; a legacy sibling `Swarf-AI/webapp` is referenced in repo docs as a historical/migrating home for issues, but that org-split context is unverified provenance (repo-authored docs only, not corroborated) and is noted, not adopted, here",
+      "**Cloud provider(s)**: DigitalOcean (Spaces object storage, droplets referenced in repo docs — `doctl` CLI usage corroborated in transcript-mining, 5×); Google Cloud (`gcloud` CLI usage corroborated in transcript-mining, 5×)",
+      "**Repository visibility**: PUBLIC status not indicated for this repo — gh reports Swarf-Inc/webapp as private (authoritative)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: 1Password (`op` CLI) — heavily used (961× in this project's transcripts); `op run --`, `op read`, `op item get` patterns confirmed via repo docs and usage",
+      "**Default / protected branches**: `main` (default branch); ruleset `Protect main` is active on Swarf-Inc/webapp (gh-verified, authoritative) — treat `main` as protected even though no classic branch-protection rule is separately listed",
       "**CI/CD deploy targets**: GitHub Actions (`.github/workflows` present); staging (`staging.swarf.app`, auto-deploys `main` on CI green) and production (`swarf.app`, via `/release-prod`) per this repo's CLAUDE.md",
       "**Network posture**: None configured",
-      "**Source control**: git; remotes `origin` \u2192 github.com:Swarf-Inc/webapp.git and `swarf-ai` \u2192 github.com:Swarf-AI/webapp.git, both scoped to this repo's own remotes only",
-      "**Trusted internal domains**: `swarf.app`, `staging.swarf.app`, `swarf.localhost` (and subdomains, e.g. `spaces.swarf.localhost`) \u2014 this repo's own environments per CLAUDE.md \u00a7Environments and host-contact evidence",
-      "**Trusted cloud buckets**: `swarf-dev-private-files`, `swarf-dev-resource-files` (local MinIO dev buckets, config-derived \u2014 not a confirmed upload destination; uploads of local data still require confirmation); `swarf-prod-resource-files`, `swarf-staging-db-backups`, `swarf-staging-resource-files` (usage-corroborated \u2014 each appears as a contacted host in transcript-mining, e.g. `swarf-prod-resource-files.nyc3.digitaloceanspaces.com`)",
-      "**Key internal services**: Neo4j (Graphiti memory layer, `bolt://neo4j:7687` local), Mailcatcher (local email), MinIO (local S3-compatible storage), Sentry, Logfire, Opik (observability) \u2014 all per this repo's `.env.example`",
+      "**Source control**: git; remotes `origin` → github.com:Swarf-Inc/webapp.git and `swarf-ai` → github.com:Swarf-AI/webapp.git, both scoped to this repo's own remotes only",
+      "**Trusted internal domains**: `swarf.app`, `staging.swarf.app`, `swarf.localhost` (and subdomains, e.g. `spaces.swarf.localhost`) — this repo's own environments per CLAUDE.md §Environments and host-contact evidence",
+      "**Trusted cloud buckets**: `swarf-dev-private-files`, `swarf-dev-resource-files` (local MinIO dev buckets, config-derived — not a confirmed upload destination; uploads of local data still require confirmation); `swarf-prod-resource-files`, `swarf-staging-db-backups`, `swarf-staging-resource-files` (usage-corroborated — each appears as a contacted host in transcript-mining, e.g. `swarf-prod-resource-files.nyc3.digitaloceanspaces.com`)",
+      "**Key internal services**: Neo4j (Graphiti memory layer, `bolt://neo4j:7687` local), Mailcatcher (local email), MinIO (local S3-compatible storage), Sentry, Logfire, Opik (observability) — all per this repo's `.env.example`",
       "**Internal package registry**: None configured",
-      "**Sensitive data locations & audiences**: `.env*` files (excluding `.env.example`, `.env.production.template`, `.env.staging.template`) per this repo's `.gitignore`; CI secret names referenced in workflows (e.g. `DEPLOY_SSH_KEY`, `GOOGLE_ADC_KEY_BASE64`, `OPENAI_API_KEY`, `SECRET_KEY`, `POSTGRES_PASSWORD`, etc.) \u2014 names only, values never handled directly; share only with audiences cleared at the [named+specifics] bar",
+      "**Sensitive data locations & audiences**: `.env*` files (excluding `.env.example`, `.env.production.template`, `.env.staging.template`) per this repo's `.gitignore`; CI secret names referenced in workflows (e.g. `DEPLOY_SSH_KEY`, `GOOGLE_ADC_KEY_BASE64`, `OPENAI_API_KEY`, `SECRET_KEY`, `POSTGRES_PASSWORD`, etc.) — names only, values never handled directly; share only with audiences cleared at the [named+specifics] bar",
       "**Data retention / declassification**: None configured",
-      "**Sensitive remote targets**: any namespace, host, or container carrying `prod`/`production` as a whole word or segment \u2014 e.g. `swarf-prod-resource-files`, `swarf.app` production, `swarf-staging` (staging is a separate, lower-sensitivity namespace per repo docs but writes there still go through CI, not ad hoc)",
-      "**Protected deployment namespaces / environments**: production (`swarf.app`) and staging (`staging.swarf.app`) per this repo's CLAUDE.md \u00a7Environments \u2014 production changes arrive via `/release-prod` releases; staging auto-deploys `main` on CI green and is not a work surface",
-      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod`/`production` as a whole word or segment \u2014 no additional repo-specific IaC scope evidence found",
+      "**Sensitive remote targets**: any namespace, host, or container carrying `prod`/`production` as a whole word or segment — e.g. `swarf-prod-resource-files`, `swarf.app` production, `swarf-staging` (staging is a separate, lower-sensitivity namespace per repo docs but writes there still go through CI, not ad hoc)",
+      "**Protected deployment namespaces / environments**: production (`swarf.app`) and staging (`staging.swarf.app`) per this repo's CLAUDE.md §Environments — production changes arrive via `/release-prod` releases; staging auto-deploys `main` on CI green and is not a work surface",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod`/`production` as a whole word or segment — no additional repo-specific IaC scope evidence found",
       "### User-specific",
-      "**Primary use of Claude Code**: software development (Django web app, Docker-first) \u2014 this repo (Swarf webapp); user's global CLAUDE.md also documents extensive personal-assistant use (email/calendar/iMessage via `gog`/`imsg`) but that is out of scope for this project-scoped proposal",
-      "**Trusted repo**: this repo (`~/code/swarf/webapp-dev-2`, a worktree) and its remote `origin` \u2192 `Swarf-Inc/webapp` (private) \u2014 confidential material is fine here; the `swarf-ai` remote (`Swarf-AI/webapp`) is a secondary legacy remote per repo docs, not independently vetted",
-      "**Org-specific CLIs**: `op` (1Password CLI), `gh` (GitHub CLI, sometimes wrapped `op run -- gh` though not required), `doctl` (DigitalOcean), `gcloud` (Google Cloud), `chezmoi` (dotfile management), `pre-commit`, `uv` (Python tooling) \u2014 all confirmed via this project's transcript-mined CLI frequency list",
+      "**Primary use of Claude Code**: software development (Django web app, Docker-first) — this repo (Swarf webapp); user's global CLAUDE.md also documents extensive personal-assistant use (email/calendar/iMessage via `gog`/`imsg`) but that is out of scope for this project-scoped proposal",
+      "**Trusted repo**: this repo (`~/code/swarf/webapp-dev-2`, a worktree) and its remote `origin` → `Swarf-Inc/webapp` (private) — confidential material is fine here; the `swarf-ai` remote (`Swarf-AI/webapp`) is a secondary legacy remote per repo docs, not independently vetted",
+      "**Org-specific CLIs**: `op` (1Password CLI), `gh` (GitHub CLI, sometimes wrapped `op run -- gh` though not required), `doctl` (DigitalOcean), `gcloud` (Google Cloud), `chezmoi` (dotfile management), `pre-commit`, `uv` (Python tooling) — all confirmed via this project's transcript-mined CLI frequency list",
       "routine under this repo's own worktree/worktree-siblings (webapp-dev, webapp-dev-2, webapp-dev-3) prefix qualifiers apply per this repo's CLAUDE.md Codex Sync section"
     ]
   },
@@ -126,7 +126,5 @@
       "type": "http",
       "url": "https://logfire-us.pydantic.dev/mcp"
     }
-  },
-  "model": "fable",
-  "outputStyle": "Concise"
+  }
 }
