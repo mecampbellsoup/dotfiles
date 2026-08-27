@@ -130,13 +130,25 @@ First messages:
 
 Match the user's description against the first messages. The right conversation is usually obvious from the opening message.
 
-**Before Stage 3, check the retention floor.** Session transcripts are not retained indefinitely — get the earliest embedded timestamp across every candidate directory (first line matching `"timestamp":"` in each `.jsonl`, take the minimum) before spending multiple keyword-grep rounds:
+**Before Stage 3, check the retention floor.** Session transcripts are not retained indefinitely, so ask what the oldest surviving **file** is before spending keyword-grep rounds on a window that no longer exists:
 
 ```bash
-grep -h -o '"timestamp":"[^"]*"' ~/.claude/projects/*/*.jsonl 2>/dev/null | sort | head -1
+find ~/.claude/projects -name '*.jsonl' -not -path '*subagents*' \
+  -exec stat -f '%Sm %N' -t '%Y-%m-%d' {} + 2>/dev/null | sort | head -1
 ```
 
-If the user's stated timeframe predates that floor, say so directly and stop — the transcript most likely no longer exists, and no amount of keyword broadening will find it. This check takes one command and should run as soon as the user gives a rough timeframe, before Stage 2 or Stage 3 burn rounds on a search that can't succeed. (2026-07-31: five rounds of GitHub-issue search, git log search, and keyword grep across every project directory — for a conversation the user placed "about 2 months ago" — all failed before checking the floor, which showed every directory's earliest transcript was exactly 30 days old. The floor check would have shortcut the whole search.)
+**Read file mtimes, not the timestamps inside the files.** Those answer different questions, and the difference is large enough to send a search after a transcript that was deleted weeks ago. A long-running or resumed session keeps writing to one file, so its *earliest* embedded timestamp can predate its own file's retention window by a wide margin — the minimum across all files is therefore the start of the oldest surviving **conversation**, never the boundary of what still exists. Measured 2026-08-27: earliest embedded timestamp 2026-07-02 (56 days), oldest surviving file 2026-07-29 (29 days). Reading the first as the floor said a mid-July transcript should still be there; it had been gone for weeks.
+
+The window is rolling, not a fixed date — four files aged out within one hour of each other during that same session, so re-run the check rather than reusing an earlier answer.
+
+**What the floor bounds is last activity, not session start.** Retention tracks when a file was last written, so a conversation that began well before the floor is still present if it was resumed after it. A stated timeframe that predates the floor makes the transcript unlikely rather than impossible — say so in those terms, and let a long-running session be the exception that occasionally survives.
+
+If the user's stated timeframe predates the floor, say so directly and stop. This check takes one command and should run as soon as the user gives a rough timeframe, before Stage 2 or Stage 3 burn rounds on a search that can't succeed.
+
+Two cases, and the second is why this now reads file mtimes:
+
+- **2026-07-31** — five rounds of GitHub-issue search, git log search, and keyword grep across every project directory, for a conversation the user placed "about 2 months ago," all failed before anyone checked the floor. The floor check would have shortcut the whole search.
+- **2026-08-27** — the floor check *ran*, returned 2026-07-02 from embedded timestamps, and cleared a search for a 2026-07-14 session that no longer existed. Two more rounds followed. The instrument answered a question nobody asked, and answered it confidently.
 
 ### Stage 3: Keyword Grep (Fallback Only)
 
