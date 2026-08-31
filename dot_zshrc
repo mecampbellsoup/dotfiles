@@ -82,6 +82,19 @@ autoload -U compinit && compinit
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ssh-agent
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
+# The plugin re-creates its /tmp/ssh-agent-$USERNAME-screen symlink on every
+# startup with `ln -sf` (unlink, then symlink -- not atomic), so tmux panes
+# launching concurrently race and print "ln: ...: File exists". Make the link
+# ourselves via rename(2) and point SSH_AUTH_SOCK at it; the plugin's own
+# `[[ ! -L $SSH_AUTH_SOCK ]]` guard then skips its racy branch entirely.
+if [[ -n "$SSH_AUTH_SOCK" && ! -L "$SSH_AUTH_SOCK" ]]; then
+  _ssh_auth_link=/tmp/ssh-agent-$USERNAME-screen
+  ln -sf "$SSH_AUTH_SOCK" "$_ssh_auth_link.$$" &&
+    mv -f "$_ssh_auth_link.$$" "$_ssh_auth_link" &&
+    export SSH_AUTH_SOCK=$_ssh_auth_link
+  unset _ssh_auth_link
+fi
+
 # nvm: auto-switch node version on cd based on .nvmrc
 # ~/.nvmrc = "system" (brew node), swarf worktrees = "24.13.0"
 zstyle ':omz:plugins:nvm' autoload true
@@ -175,3 +188,6 @@ export PYTHONDONTWRITEBYTECODE=1
 # OpenClaw Completion
 source "/Users/mcampbell/.openclaw/completions/openclaw.zsh"
 
+
+# opencode
+export PATH=/Users/mcampbell/.opencode/bin:$PATH
